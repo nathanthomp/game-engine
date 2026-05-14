@@ -11,15 +11,17 @@ import javax.swing.JPanel;
  * Will not be extendable (99% chance).
  */
 public class Surface extends JPanel implements KeyListener {
+    private final Input input;
     private final BufferedImage frameBuffer;
-    
-    public Surface(int width, int height) {
+
+    public Surface(Input input) {
         this.setFocusable(true);
         this.requestFocusInWindow();
-        this.setPreferredSize(new Dimension(width, height));
+        this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         this.addKeyListener(this);
 
-        this.frameBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.input = input;
+        this.frameBuffer = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
     }
 
     public BufferedImage getFramebuffer() {
@@ -33,15 +35,16 @@ public class Surface extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent event) {
-    }
-
-    @Override
     public void keyPressed(KeyEvent event) {
-        System.out.println("Key Pressed: " + event.getKeyCode());
+        this.input.keyDown(event.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent event) {
+        this.input.keyUp(event.getKeyCode());
+    }
+
+    @Override
+    public void keyTyped(KeyEvent event) {
     }
 }
