@@ -22,10 +22,13 @@ public class Geometry {
 
     public static class Triangle {
         public int a, b, c;
-        public Triangle(int a, int b, int c) {
+        public int color;
+
+        public Triangle(int a, int b, int c, int color) {
             this.a = a;
             this.b = b;
             this.c = c;
+            this.color = color;
         }
     }
 

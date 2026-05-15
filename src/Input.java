@@ -1,5 +1,8 @@
 import java.util.Arrays;
 
+/**
+ * TODO: Add mouse input support.
+ */
 public class Input {
     private final boolean[] down = new boolean[256];
     private final boolean[] pressed = new boolean[256];

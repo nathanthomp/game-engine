@@ -20,19 +20,20 @@ public class Renderer {
     }
 
     public boolean isBackface(Geometry.TransformedTriangle triangle) {
-        float area =
-            (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
-            (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
+        float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
+                (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
 
-        return area <= 0;
+        return area >= 0;
     }
 
     public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
-        int minX = Math.max(0, (int)Math.floor(Math.min(triangle.a.x, Math.min(triangle.b.x, triangle.c.x))));
-        int maxX = Math.min(Game.WIDTH - 1, (int)Math.ceil(Math.max(triangle.a.x, Math.max(triangle.b.x, triangle.c.x))));
+        int minX = Math.max(0, (int) Math.floor(Math.min(triangle.a.x, Math.min(triangle.b.x, triangle.c.x))));
+        int maxX = Math.min(Game.WIDTH - 1,
+                (int) Math.ceil(Math.max(triangle.a.x, Math.max(triangle.b.x, triangle.c.x))));
 
-        int minY = Math.max(0, (int)Math.floor(Math.min(triangle.a.y, Math.min(triangle.b.y, triangle.c.y))));
-        int maxY = Math.min(Game.HEIGHT - 1, (int)Math.ceil(Math.max(triangle.a.y, Math.max(triangle.b.y, triangle.c.y))));
+        int minY = Math.max(0, (int) Math.floor(Math.min(triangle.a.y, Math.min(triangle.b.y, triangle.c.y))));
+        int maxY = Math.min(Game.HEIGHT - 1,
+                (int) Math.ceil(Math.max(triangle.a.y, Math.max(triangle.b.y, triangle.c.y))));
 
         float area = edge(triangle.a.x, triangle.a.y, triangle.b.x, triangle.b.y, triangle.c.x, triangle.c.y);
 
@@ -56,6 +57,56 @@ public class Renderer {
                     }
                 }
             }
+        }
+    }
+
+    public void drawWireframe(Geometry.TransformedTriangle t, int color) {
+        drawLineDepth(t.a.x, t.a.y, t.a.z,
+                t.b.x, t.b.y, t.b.z, color);
+
+        drawLineDepth(t.b.x, t.b.y, t.b.z,
+                t.c.x, t.c.y, t.c.z, color);
+
+        drawLineDepth(t.c.x, t.c.y, t.c.z,
+                t.a.x, t.a.y, t.a.z, color);
+    }
+
+    public void drawLineDepth(float x0, float y0, float z0,
+            float x1, float y1, float z1,
+            int color) {
+
+        float dx = x1 - x0;
+        float dy = y1 - y0;
+        float dz = z1 - z0;
+
+        int steps = (int) Math.max(Math.abs(dx), Math.abs(dy));
+        if (steps == 0)
+            return;
+
+        float sx = dx / steps;
+        float sy = dy / steps;
+        float sz = dz / steps;
+
+        float x = x0;
+        float y = y0;
+        float z = z0;
+
+        for (int i = 0; i <= steps; i++) {
+            drawPixelDepth((int) x, (int) y, z, color);
+            x += sx;
+            y += sy;
+            z += sz;
+        }
+    }
+
+    public void drawPixelDepth(int x, int y, float depth, int color) {
+        if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT)
+            return;
+
+        int index = y * Game.WIDTH + x;
+        if (depth < depths[index]) {
+            depths[index] = depth;
+            pixels[index] = color;
         }
     }
 

@@ -2,24 +2,26 @@ public class Camera {
     private static final float DEFAULT_FOV = 60.0f;
 
     private Transform.Position position = new Transform.Position(0, 0, 0);
-    private Transform.Rotation rotation = new Transform.Rotation(0, 0, 0);
 
     private float fov = (float) Math.toRadians(DEFAULT_FOV);
     private float near = 0.1f;
     private float far = 1000f;
-    private float aspect = 1.0f;
+    private float aspect = (float) Game.WIDTH / (float) Game.HEIGHT;
+
+    public float yaw = 0f;
+    public float pitch = 0f;
 
     public Transform.Position getPosition() {
         return this.position;
     }
 
     public Matrix getViewMatrix() {
-        // View = inverse(Translation * Rotation)
-        Matrix translation = Matrix.translation(
-            new Transform.Position(-this.position.x, -this.position.y, -this.position.z));
+        Matrix rotY = Matrix.rotationY(-yaw);
+        Matrix rotX = Matrix.rotationX(-pitch);
+        Matrix rotation = rotX.multiply(rotY);
 
-        Matrix rotation = Matrix.rotation(
-            new Transform.Rotation(-this.rotation.pitch, -this.rotation.yaw, -this.rotation.roll));
+        Matrix translation = Matrix.translation(
+                new Transform.Position(-position.x, -position.y, -position.z));
 
         return rotation.multiply(translation);
     }
@@ -36,20 +38,42 @@ public class Camera {
     }
 
     public Transform.Position getForward() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getForward'");
+        float cp = (float) Math.cos(pitch);
+        float sp = (float) Math.sin(pitch);
+        float cy = (float) Math.cos(yaw);
+        float sy = (float) Math.sin(yaw);
+
+        return new Transform.Position(
+                sy * cp,
+                -sp,
+                -cy * cp);
     }
 
     public Transform.Position getRight() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRight'");
+        float cy = (float) Math.cos(yaw);
+        float sy = (float) Math.sin(yaw);
+
+        return new Transform.Position(
+                cy,
+                0,
+                sy);
+    }
+
+    public Transform.Position getUp() {
+        Transform.Position f = getForward();
+        Transform.Position r = getRight();
+
+        // up = right × forward
+        return new Transform.Position(
+                r.y * f.z - r.z * f.y,
+                r.z * f.x - r.x * f.z,
+                r.x * f.y - r.y * f.x);
     }
 
     // public void move(float dx, float dy, float dz) {
-    //     this.position.x += dx;
-    //     this.position.y += dy;
-    //     this.position.z += dz;
+    // this.position.x += dx;
+    // this.position.y += dy;
+    // this.position.z += dz;
     // }
 
-    
 }
