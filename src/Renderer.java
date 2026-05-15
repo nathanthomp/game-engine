@@ -7,37 +7,59 @@ import java.util.Arrays;
  */
 public class Renderer {
     private final int[] pixels;
+    private final float[] depths;
 
     public Renderer(Surface surface) {
         this.pixels = ((DataBufferInt) surface.getFramebuffer().getRaster().getDataBuffer()).getData();
+        this.depths = new float[this.pixels.length];
     }
 
     public void clear() {
         Arrays.fill(pixels, 0xFF000000); // opaque black
+        Arrays.fill(depths, Float.POSITIVE_INFINITY);
     }
 
-    public void drawRectangle(int x, int y, int w, int h, int argb) {
-        for (int yy = y; yy < y + h; yy++) {
-            if (yy < 0 || yy >= Game.HEIGHT) {
-                continue;
-            }
-            for (int xx = x; xx < x + w; xx++) {
-                if (xx < 0 || xx >= Game.WIDTH) {
-                    continue;
+    public boolean isBackface(Geometry.TransformedTriangle triangle) {
+        float area =
+            (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
+            (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
+
+        return area <= 0;
+    }
+
+    public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
+        int minX = Math.max(0, (int)Math.floor(Math.min(triangle.a.x, Math.min(triangle.b.x, triangle.c.x))));
+        int maxX = Math.min(Game.WIDTH - 1, (int)Math.ceil(Math.max(triangle.a.x, Math.max(triangle.b.x, triangle.c.x))));
+
+        int minY = Math.max(0, (int)Math.floor(Math.min(triangle.a.y, Math.min(triangle.b.y, triangle.c.y))));
+        int maxY = Math.min(Game.HEIGHT - 1, (int)Math.ceil(Math.max(triangle.a.y, Math.max(triangle.b.y, triangle.c.y))));
+
+        float area = edge(triangle.a.x, triangle.a.y, triangle.b.x, triangle.b.y, triangle.c.x, triangle.c.y);
+
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                float w0 = edge(triangle.b.x, triangle.b.y, triangle.c.x, triangle.c.y, x, y);
+                float w1 = edge(triangle.c.x, triangle.c.y, triangle.a.x, triangle.a.y, x, y);
+                float w2 = edge(triangle.a.x, triangle.a.y, triangle.b.x, triangle.b.y, x, y);
+
+                if (w0 >= 0 && w1 >= 0 && w2 >= 0) {
+                    w0 /= area;
+                    w1 /= area;
+                    w2 /= area;
+
+                    float depth = w0 * triangle.a.z + w1 * triangle.b.z + w2 * triangle.c.z;
+                    int index = y * Game.WIDTH + x;
+
+                    if (depth < depths[index]) {
+                        depths[index] = depth;
+                        pixels[index] = argb;
+                    }
                 }
-                pixels[yy * Game.WIDTH + xx] = argb;
             }
         }
     }
 
-    public void drawBorder() {
-        for (int x = 0; x < Game.WIDTH; x++) {
-            pixels[x] = 0xFFFF0000; // top border
-            pixels[pixels.length - Game.WIDTH + x] = 0xFFFF0000; // bottom border
-        }
-        for (int y = 0; y < Game.HEIGHT; y++) {
-            pixels[y * Game.WIDTH] = 0xFFFF0000; // left border
-            pixels[y * Game.WIDTH + Game.WIDTH - 1] = 0xFFFF0000; // right border
-        }
+    private float edge(float ax, float ay, float bx, float by, float px, float py) {
+        return (px - ax) * (by - ay) - (py - ay) * (bx - ax);
     }
 }
