@@ -8,11 +8,14 @@ import java.util.List;
 public class Scene {
 
     private static class Cube implements Renderable {
-
         private Geometry.Mesh mesh;
         private Transform transform;
 
         public Cube() {
+            this.build();
+        }
+
+        public void build() {
             Geometry.Vertex[] vertices = new Geometry.Vertex[] {
                     new Geometry.Vertex(-1, -1, -1), // 0
                     new Geometry.Vertex(1, -1, -1), // 1
@@ -90,10 +93,6 @@ public class Scene {
         float lookSpeed = 0.02f;
         float moveSpeed = 0.1f;
 
-        // ----------------------------
-        // ROTATION (arrow keys ONLY)
-        // ----------------------------
-
         if (input.isDown(37))
             camera.yaw -= lookSpeed; // Left arrow
         if (input.isDown(39))
@@ -103,12 +102,7 @@ public class Scene {
         if (input.isDown(40))
             camera.pitch -= lookSpeed; // Down arrow
 
-        // Clamp pitch
         camera.pitch = Math.max(-1.5f, Math.min(1.5f, camera.pitch));
-
-        // ----------------------------
-        // MOVEMENT (WASD ONLY)
-        // ----------------------------
 
         Transform.Position forward = camera.getForward();
         Transform.Position right = camera.getRight();
@@ -148,7 +142,7 @@ public class Scene {
 
         for (Renderable renderable : renderables) {
             Matrix modelMatrix = renderable.getTransform().getModelMatrix();
-            Matrix mvpMatrix = modelMatrix.multiply(viewMatrix).multiply(projectionMatrix);
+            Matrix mvpMatrix = projectionMatrix.multiply(viewMatrix).multiply(modelMatrix);
 
             // 3.3 Transform ALL vertices once → screen space
             Geometry.Vertex[] transformedVertices = new Geometry.Vertex[renderable.getMesh().vertices.length];

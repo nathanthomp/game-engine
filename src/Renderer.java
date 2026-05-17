@@ -19,11 +19,10 @@ public class Renderer {
         Arrays.fill(depths, Float.POSITIVE_INFINITY);
     }
 
-    public boolean isBackface(Geometry.TransformedTriangle triangle) {
-        float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
-                (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
-
-        return area >= 0;
+    public boolean isBackface(Geometry.TransformedTriangle triangle) {;
+            float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
+                        (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
+            return area >= 0;
     }
 
     public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
@@ -80,8 +79,9 @@ public class Renderer {
         float dz = z1 - z0;
 
         int steps = (int) Math.max(Math.abs(dx), Math.abs(dy));
-        if (steps == 0)
+        if (steps == 0) {
             return;
+        }
 
         float sx = dx / steps;
         float sy = dy / steps;
@@ -100,9 +100,10 @@ public class Renderer {
     }
 
     public void drawPixelDepth(int x, int y, float depth, int color) {
-        if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT)
+        if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT) {
             return;
-
+        }
+        
         int index = y * Game.WIDTH + x;
         if (depth < depths[index]) {
             depths[index] = depth;

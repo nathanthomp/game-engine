@@ -40,9 +40,10 @@ public class Transform {
     }
 
     public Matrix getModelMatrix() {
-        Matrix t = Matrix.translation(position);
-        Matrix r = Matrix.rotation(rotation);
-        Matrix s = Matrix.scale(scale);
-        return t.multiply(r).multiply(s);
+        Matrix translation = Matrix.translation(this.position);
+        Matrix rotation = Matrix.rotation(this.rotation);
+        Matrix scale = Matrix.scale(this.scale);
+
+        return translation.multiply(rotation).multiply(scale);
     }
 }
