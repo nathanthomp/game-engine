@@ -1,14 +1,13 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
 import javax.swing.Timer;
 
 /**
  * Represents the controller layer.
  * Primary responsibility is to control the game loop and user input.
  */
-public class Game extends JFrame implements ActionListener {
+public final class Game implements ActionListener {
     public static final int WIDTH = 800, HEIGHT = 600;
 
     private static final String TITLE = "Golf Game";
@@ -16,26 +15,23 @@ public class Game extends JFrame implements ActionListener {
 
     private final Timer timer = new Timer(Game.DELAY, this);
     private final Input input = new Input();
-    private final Surface surface = new Surface(this.input);
-    private final Renderer renderer = new Renderer(this.surface);
+    private final Manager manager = new Manager(new Scene(this.input));
+    private final Renderer renderer = new Renderer(new Surface(Game.TITLE, this.input));
 
-    private Scene scene;
     private long lastTime;
 
     private int renders = 0;
     private float rendersPerSecondTimer = 0;
     private int rendersPerSecond = 0;
 
+    // Pass in initial scene, title, width, height
     public Game() {
-        this.scene = new Scene(this.input);
+        // Move this to a start method if you want a menu or something
+        this.lastTime = System.nanoTime();
+        this.timer.start();
+    }
 
-        this.setTitle(Game.TITLE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.add(surface);
-        this.pack();
-        this.setVisible(true);
-
+    public void start() {
         this.lastTime = System.nanoTime();
         this.timer.start();
     }
@@ -63,9 +59,9 @@ public class Game extends JFrame implements ActionListener {
         float deltaTime = this.computeDeltaTime();
         this.computeRendersPerSecond(deltaTime);
 
-        this.scene.update(deltaTime);
-        this.scene.render(renderer);
-        this.surface.repaint();
+        Scene currentScene = this.manager.getCurrentScene();
+        currentScene.update(deltaTime);
+        this.renderer.render(currentScene);
 
         this.input.release();
     }

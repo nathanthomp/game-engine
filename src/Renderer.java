@@ -6,26 +6,74 @@ import java.util.Arrays;
  * Can be extended to include WireframeRenderer, DebugRenderer, NormalRenderer
  */
 public class Renderer {
+    private final Surface surface;
     private final int[] pixels;
     private final float[] depths;
 
     public Renderer(Surface surface) {
+        this.surface = surface;
         this.pixels = ((DataBufferInt) surface.getFramebuffer().getRaster().getDataBuffer()).getData();
         this.depths = new float[this.pixels.length];
     }
 
-    public void clear() {
+    public void render(Scene scene) {
+        this.clear();
+
+        Matrix viewMatrix = scene.getCamera().getViewMatrix();
+        Matrix projectionMatrix = scene.getCamera().getProjectionMatrix();
+
+        for (Entity entity : scene.getEntities()) {
+            if (entity instanceof Renderable renderable) {
+                Matrix modelMatrix = entity.getTransform().getModelMatrix();
+                Matrix mvpMatrix = projectionMatrix.multiply(viewMatrix).multiply(modelMatrix);
+
+                Geometry.Vertex[] transformedVertices = new Geometry.Vertex[renderable.getMesh().vertices.length];
+                for (int i = 0; i < renderable.getMesh().vertices.length; i++) {
+                    Geometry.Vertex vertex = renderable.getMesh().vertices[i];
+
+                    // 1. Clip-space getPosition()
+                    Geometry.Vertex clip = mvpMatrix.multiply(vertex);
+
+                    // 2. Perspective divide → NDC
+                    float ndcX = clip.x / clip.w;
+                    float ndcY = clip.y / clip.w;
+                    float ndcZ = clip.z / clip.w;
+
+                    // 3. Viewport transform → screen space
+                    float screenX = (ndcX + 1f) * 0.5f * Game.WIDTH;
+                    float screenY = (1f - ndcY) * 0.5f * Game.HEIGHT;
+
+                    transformedVertices[i] = new Geometry.Vertex(screenX, screenY, ndcZ);
+                }
+
+                for (Geometry.Triangle triangle : renderable.getMesh().triangles) {
+                    Geometry.TransformedTriangle transformedTriangle = new Geometry.TransformedTriangle(
+                            transformedVertices[triangle.a],
+                            transformedVertices[triangle.b],
+                            transformedVertices[triangle.c]);
+
+                    if (!this.isBackface(transformedTriangle)) {
+                        this.rasterize(transformedTriangle, triangle.color);
+                        this.drawWireframe(transformedTriangle, 0xFFFFFFFF);
+                    }
+                }
+            }
+        }
+        this.surface.repaint();
+    }
+
+    private void clear() {
         Arrays.fill(pixels, 0xFF000000); // opaque black
         Arrays.fill(depths, Float.POSITIVE_INFINITY);
     }
 
-    public boolean isBackface(Geometry.TransformedTriangle triangle) {;
+    private boolean isBackface(Geometry.TransformedTriangle triangle) {;
             float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
                         (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
             return area >= 0;
     }
 
-    public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
+    private void rasterize(Geometry.TransformedTriangle triangle, int argb) {
         int minX = Math.max(0, (int) Math.floor(Math.min(triangle.a.x, Math.min(triangle.b.x, triangle.c.x))));
         int maxX = Math.min(Game.WIDTH - 1,
                 (int) Math.ceil(Math.max(triangle.a.x, Math.max(triangle.b.x, triangle.c.x))));
@@ -59,7 +107,7 @@ public class Renderer {
         }
     }
 
-    public void drawWireframe(Geometry.TransformedTriangle t, int color) {
+    private void drawWireframe(Geometry.TransformedTriangle t, int color) {
         drawLineDepth(t.a.x, t.a.y, t.a.z,
                 t.b.x, t.b.y, t.b.z, color);
 
@@ -70,7 +118,7 @@ public class Renderer {
                 t.a.x, t.a.y, t.a.z, color);
     }
 
-    public void drawLineDepth(float x0, float y0, float z0,
+    private void drawLineDepth(float x0, float y0, float z0,
             float x1, float y1, float z1,
             int color) {
 
@@ -99,7 +147,7 @@ public class Renderer {
         }
     }
 
-    public void drawPixelDepth(int x, int y, float depth, int color) {
+    private void drawPixelDepth(int x, int y, float depth, int color) {
         if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT) {
             return;
         }

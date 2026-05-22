@@ -4,34 +4,51 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
  * Represents the view layer.
  * Will not be extendable (99% chance).
  */
-public class Surface extends JPanel implements KeyListener {
-    private final Input input;
-    private final BufferedImage frameBuffer;
+public final class Surface extends JFrame implements KeyListener {
 
-    public Surface(Input input) {
+    private final class Display extends JPanel {
+        private final BufferedImage frameBuffer;
+
+        public Display() {
+            this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+            this.frameBuffer = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        }
+
+        @Override
+        protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            graphics.drawImage(this.frameBuffer, 0, 0, null);
+        }
+    }
+
+    private final Input input;
+    private final Display display = new Display();
+
+    public Surface(String title, Input input) {
+        this.input = input;
+
         this.setFocusable(true);
         this.requestFocusInWindow();
-        this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
-        this.addKeyListener(this);
 
-        this.input = input;
-        this.frameBuffer = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        this.setTitle(title);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.add(this.display);
+        this.pack();
+        this.setVisible(true);
+
+        this.addKeyListener(this);
     }
 
     public BufferedImage getFramebuffer() {
-        return this.frameBuffer;
-    }
-
-    @Override
-    protected void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
-        graphics.drawImage(this.frameBuffer, 0, 0, null);
+        return this.display.frameBuffer;
     }
 
     @Override
