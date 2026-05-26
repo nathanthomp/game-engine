@@ -2,7 +2,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,13 +15,14 @@ import javax.swing.JPanel;
  * Represents the view layer.
  * Will not be extendable (99% chance).
  */
-public final class Surface extends JFrame implements KeyListener {
+public final class Surface extends JFrame implements KeyListener, MouseListener, MouseMotionListener {
 
     private final class Display extends JPanel {
         private final BufferedImage frameBuffer;
 
         public Display() {
             this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+            this.setDoubleBuffered(true);
             this.frameBuffer = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
         }
 
@@ -45,10 +50,12 @@ public final class Surface extends JFrame implements KeyListener {
         this.setVisible(true);
 
         this.addKeyListener(this);
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
     }
 
-    public BufferedImage getFramebuffer() {
-        return this.display.frameBuffer;
+    public int[] getPixels() {
+        return ((DataBufferInt) this.display.frameBuffer.getRaster().getDataBuffer()).getData();
     }
 
     @Override
@@ -63,5 +70,38 @@ public final class Surface extends JFrame implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent event) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent event) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent event) {
+        input.mouseDown(event.getButton());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent event) {
+        input.mouseUp(event.getButton());
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent event) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent event) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent event) {
+        input.mouseMove(event.getX(), event.getY());
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent event) {
+        input.mouseMove(event.getX(), event.getY());
+        System.out.println("Mouse moved: " + event.getX() + ", " + event.getY());
     }
 }

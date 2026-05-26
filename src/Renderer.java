@@ -1,4 +1,3 @@
-import java.awt.image.DataBufferInt;
 import java.util.Arrays;
 
 /**
@@ -12,7 +11,7 @@ public class Renderer {
 
     public Renderer(Surface surface) {
         this.surface = surface;
-        this.pixels = ((DataBufferInt) surface.getFramebuffer().getRaster().getDataBuffer()).getData();
+        this.pixels = surface.getPixels();
         this.depths = new float[this.pixels.length];
     }
 
@@ -63,8 +62,8 @@ public class Renderer {
     }
 
     private void clear() {
-        Arrays.fill(pixels, 0xFF000000); // opaque black
-        Arrays.fill(depths, Float.POSITIVE_INFINITY);
+        Arrays.fill(this.pixels, 0xFF000000); // opaque black
+        Arrays.fill(this.depths, Float.POSITIVE_INFINITY);
     }
 
     private boolean isBackface(Geometry.TransformedTriangle triangle) {;
@@ -98,9 +97,9 @@ public class Renderer {
                     float depth = w0 * triangle.a.z + w1 * triangle.b.z + w2 * triangle.c.z;
                     int index = y * Game.WIDTH + x;
 
-                    if (depth < depths[index]) {
-                        depths[index] = depth;
-                        pixels[index] = argb;
+                    if (depth < this.depths[index]) {
+                        this.depths[index] = depth;
+                        this.pixels[index] = argb;
                     }
                 }
             }
@@ -153,9 +152,9 @@ public class Renderer {
         }
         
         int index = y * Game.WIDTH + x;
-        if (depth < depths[index]) {
-            depths[index] = depth;
-            pixels[index] = color;
+        if (depth < this.depths[index]) {
+            this.depths[index] = depth;
+            this.pixels[index] = color;
         }
     }
 

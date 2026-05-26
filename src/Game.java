@@ -14,9 +14,10 @@ public final class Game implements ActionListener {
     private static final int DELAY = 0;
 
     private final Timer timer = new Timer(Game.DELAY, this);
-    private final Input input = new Input();
-    private final Manager manager = new Manager(new Scene(this.input));
-    private final Renderer renderer = new Renderer(new Surface(Game.TITLE, this.input));
+
+    private final Input input;          // Should Input be a singleton?
+    private final Manager manager;
+    private final Renderer renderer;
 
     private long lastTime;
 
@@ -26,14 +27,31 @@ public final class Game implements ActionListener {
 
     // Pass in initial scene, title, width, height
     public Game() {
+        Input input = new Input();
+
+        Scene initialScene = new Scene(input);
+        this.manager = new Manager(initialScene);
+
+        Surface surface = new Surface(Game.TITLE, input);
+        this.renderer = new Renderer(surface);
+
+        this.input = input;
+
         // Move this to a start method if you want a menu or something
         this.lastTime = System.nanoTime();
         this.timer.start();
     }
 
-    public void start() {
-        this.lastTime = System.nanoTime();
-        this.timer.start();
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        float deltaTime = this.computeDeltaTime();
+        this.computeRendersPerSecond(deltaTime);
+
+        Scene currentScene = this.manager.getCurrentScene();
+        currentScene.update(deltaTime);
+        this.renderer.render(currentScene);
+
+        this.input.release();
     }
 
     private float computeDeltaTime() {
@@ -52,18 +70,6 @@ public final class Game implements ActionListener {
             this.rendersPerSecondTimer -= 1.0f;
             System.out.println("FPS: " + rendersPerSecond);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent event) {
-        float deltaTime = this.computeDeltaTime();
-        this.computeRendersPerSecond(deltaTime);
-
-        Scene currentScene = this.manager.getCurrentScene();
-        currentScene.update(deltaTime);
-        this.renderer.render(currentScene);
-
-        this.input.release();
     }
 
     public static void main(String[] args) {

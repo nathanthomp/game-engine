@@ -34,17 +34,21 @@ public class Scene {
      */
     public void update(float deltaTime) {
 
-        float lookSpeed = 0.02f;
+        // float lookSpeed = 0.02f;
+        float lookSpeed = 0.002f;
         float moveSpeed = 0.1f;
 
-        if (input.isDown(37))
-            camera.yaw -= lookSpeed; // Left arrow
-        if (input.isDown(39))
-            camera.yaw += lookSpeed; // Right arrow
-        if (input.isDown(38))
-            camera.pitch += lookSpeed; // Up arrow
-        if (input.isDown(40))
-            camera.pitch -= lookSpeed; // Down arrow
+        camera.yaw += input.getMouseDeltaX() * lookSpeed;
+        camera.pitch += input.getMouseDeltaY() * lookSpeed;
+
+        // if (input.isDown(37))
+        //     camera.yaw -= lookSpeed; // Left arrow
+        // if (input.isDown(39))
+        //     camera.yaw += lookSpeed; // Right arrow
+        // if (input.isDown(38))
+        //     camera.pitch += lookSpeed; // Up arrow
+        // if (input.isDown(40))
+        //     camera.pitch -= lookSpeed; // Down arrow
 
         camera.pitch = Math.max(-1.5f, Math.min(1.5f, camera.pitch));
 
