@@ -49,7 +49,7 @@ public final class Game implements ActionListener {
 
         Scene currentScene = this.manager.getCurrentScene();
         currentScene.update(deltaTime);
-        this.renderer.render(currentScene);
+        this.renderer.render(currentScene, this.rendersPerSecond);
 
         this.input.release();
     }
