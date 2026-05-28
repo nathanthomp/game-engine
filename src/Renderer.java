@@ -7,340 +7,11 @@ import java.util.Arrays;
  * Responsibilites include rendering entities and text
  * 
  * Methods:
- * - drawText
- * - drawLine
- * - drawRect
+ * - render(Scene scene): renders the given scene
+ * - renderText(String text, int scale, int x, int y): renders text at the given position and scale
+ * - renderRectangle(int x, int y, int width, int height, int argb, boolean filled): renders a rectangle at the given position and size with the given color
  */
 public class Renderer {
-    private static final int GLYTH_LENGTH = 8;
-    private static final int[] LETTERS = new int[] {
-        0, 0, 1, 1, 1, 1, 0, 0, 
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 1, 1, 1, 1, 1, 0, 0, 
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0, 
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 1, 1, 1, 1, 1, 0, 0, 
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0, 
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 1, 1, 1, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0, 
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 1, 1, 1, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0, 
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 1, 0, 0, 0, 0, 1, 0, 
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 1, 1, 1, 1, 1, 1, 0, 
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 0, 
-
-        0, 1, 1, 1, 1, 1, 1, 0, 
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 0, 0, 0,
-        0, 1, 1, 1, 0, 0, 0, 0, 
-
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 0, 1, 1, 0, 0, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-        0, 1, 0, 1, 1, 0, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0, 
-
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0, 
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 1, 1, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 0, 1, 0,
-        0, 1, 0, 1, 0, 0, 1, 0,
-        0, 1, 0, 1, 0, 0, 1, 0,
-        0, 1, 0, 0, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, 0, 1, 1, 0, 0,
-        0, 0, 1, 1, 1, 1, 1, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 1, 0,
-        0, 1, 1, 1, 1, 1, 0, 0,
-        0, 1, 0, 0, 1, 0, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 1, 0,
-        0, 1, 1, 0, 1, 0, 1, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0, 
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 0, 1, 0, 0, 1, 0, 0,
-        0, 0, 1, 0, 0, 1, 0, 0,
-        0, 0, 0, 1, 1, 0, 0, 0, 
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 1, 1, 0, 1, 0,
-        0, 1, 0, 1, 1, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 0, 0, 1, 0, 0, 
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 0, 1, 0, 0, 1, 0, 0,
-        0, 0, 0, 1, 1, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 0, 1, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 0, 1, 1, 0, 1, 0, 0,
-        0, 0, 0, 1, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-
-
-        0, 1, 1, 1, 1, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 1, 1, 0, 0, 0,
-        0, 0, 1, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-    };
-    private static final int[] NUMBERS = new int[] {
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 0, 0, 0,
-        0, 1, 1, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0, 0,
-        0, 0, 1, 1, 0, 0, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 0, 0, 1, 1, 0, 0,
-        0, 0, 0, 1, 0, 1, 0, 0,
-        0, 0, 1, 0, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 1, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 1, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 1, 1, 1, 1, 1, 0, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 1, 1, 0,
-        0, 0, 0, 0, 1, 1, 0, 0,
-        0, 0, 0, 1, 1, 0, 0, 0,
-        0, 0, 1, 1, 0, 0, 0, 0,
-        0, 1, 1, 0, 0, 0, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-
-        0, 0, 1, 1, 1, 1, 0, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1, 0,
-        0, 0, 1, 1, 1, 1, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 1, 1, 0, 0, 1, 1, 0,
-        0, 0, 1, 1, 1, 1, 0, 0,
-    };
-
     private final Surface surface;
     private final int[] pixels;
     private final float[] depths;
@@ -351,104 +22,67 @@ public class Renderer {
         this.depths = new float[this.pixels.length];
     }
 
+    /**
+     * Renderer must have render method
+     * 
+     * this.clear()
+     * scene.render(this) -> Scene must have render method
+     * Extra stuff here
+     */
     public void render(Scene scene, int rendersPerSecond) {
         this.clear();
 
-        /**
-         * Rendering 3D objects
-         */
-        Matrix viewMatrix = scene.getCamera().getViewMatrix();
-        Matrix projectionMatrix = scene.getCamera().getProjectionMatrix();
+        scene.render(this);
 
-        for (Entity entity : scene.getEntities()) {
-            if (entity instanceof Renderable renderable) {
-                Matrix modelMatrix = entity.getTransform().getModelMatrix();
-                Matrix mvpMatrix = projectionMatrix.multiply(viewMatrix).multiply(modelMatrix);
+        int startY = 10;
+        int scale = 1;
+        int padding = 2;
 
-                Geometry.Vertex[] transformedVertices = new Geometry.Vertex[renderable.getMesh().vertices.length];
-                for (int i = 0; i < renderable.getMesh().vertices.length; i++) {
-                    Geometry.Vertex vertex = renderable.getMesh().vertices[i];
+        this.renderText("0123456789", scale, 10, startY);
 
-                    // 1. Clip-space getPosition()
-                    Geometry.Vertex clip = mvpMatrix.multiply(vertex);
+        startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
+        scale++;
+        Text.Size size = Text.Size.LARGE;
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", scale, 10, startY);
 
-                    // 2. Perspective divide → NDC
-                    float ndcX = clip.x / clip.w;
-                    float ndcY = clip.y / clip.w;
-                    float ndcZ = clip.z / clip.w;
+        startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
+        scale--;
 
-                    // 3. Viewport transform → screen space
-                    float screenX = (ndcX + 1f) * 0.5f * Game.WIDTH;
-                    float screenY = (1f - ndcY) * 0.5f * Game.HEIGHT;
-
-                    transformedVertices[i] = new Geometry.Vertex(screenX, screenY, ndcZ);
-                }
-
-                for (Geometry.Triangle triangle : renderable.getMesh().triangles) {
-                    Geometry.TransformedTriangle transformedTriangle = new Geometry.TransformedTriangle(
-                            transformedVertices[triangle.a],
-                            transformedVertices[triangle.b],
-                            transformedVertices[triangle.c]);
-
-                    if (!this.isBackface(transformedTriangle)) {
-                        this.rasterize(transformedTriangle, triangle.color);
-                        this.drawWireframe(transformedTriangle, 0xFFFFFFFF);
-                    }
-                }
-            }
-        }
-
-        /**
-         * Rendering 2D overlays
-         */
-        drawLine(Game.WIDTH/2 - 10, Game.HEIGHT/2,
-            Game.WIDTH/2 + 10, Game.HEIGHT/2,
-            0xFFFFFFFF);
-
-        drawLine(Game.WIDTH/2, Game.HEIGHT/2 - 10,
-            Game.WIDTH/2, Game.HEIGHT/2 + 10,
-            0xFFFFFFFF);
-
-        // this.printText("0123456789", 1, 10, 10);
-        // this.printText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 10, 20);
-        this.printText("FPS " + rendersPerSecond, 1, 10, 30);
+        this.renderText("FPS: " + rendersPerSecond, scale, 10, 38);
 
         this.surface.repaint();
     }
 
-    private void printText(String text, int size, int startX, int startY) {
+    public void renderText(String text, int scale, int startX, int startY) {
         for (int i = 0; i < text.length(); i++) {
             char character = text.charAt(i);
-            if (Character.isDigit(character)) {
-                int digit = Character.getNumericValue(character);
-                int offset = digit * GLYTH_LENGTH * GLYTH_LENGTH;
-                for (int j = 0; j < GLYTH_LENGTH * GLYTH_LENGTH; j++) {
-                    int x = j % GLYTH_LENGTH;
-                    int y = j / GLYTH_LENGTH;
+            int[] glyph = Text.getGlyph(character, scale);
 
-                    if (NUMBERS[offset + j] == 1) {
-                        drawPixel(startX + i * GLYTH_LENGTH * size + x * size, startY + y * size, 0xFFFFFFFF);
-                    } else {
-                        // drawPixel(startX + i * GLYTH_LENGTH * size + x * size, startY + y * size, 0xFF0000FF);
-                    }
+            for (int j = 0; j < glyph.length; j++) {
+                if (glyph[j] == 1) {
+                    int gx = j % (Text.GLYTH_LENGTH * scale);
+                    int gy = j / (Text.GLYTH_LENGTH * scale);
+                    drawPixel(startX + i * (Text.GLYTH_LENGTH * scale) + gx, startY + gy, 0xFFFFFFFF);
                 }
-            } else if (Character.isAlphabetic(character)) {
-                int charIndex = Character.toUpperCase(character) - 'A';
-                int offset = charIndex * GLYTH_LENGTH * GLYTH_LENGTH;
-                for (int j = 0; j < GLYTH_LENGTH * GLYTH_LENGTH; j++) {
-                    int x = j % GLYTH_LENGTH;
-                    int y = j / GLYTH_LENGTH;
+            }
+        }
+    }
 
-                    if (LETTERS[offset + j] == 1) {
-                        drawPixel(startX + i * GLYTH_LENGTH * size + x * size, startY + y * size, 0xFFFFFFFF);
-                    } else {
-                        // drawPixel(startX + i * GLYTH_LENGTH * size + x * size, startY + y * size, 0xFF0000FF);
-                    }
+    public void renderRectangle(int x, int y, int width, int height, int color, boolean fill) {
+        if (fill) {
+            for (int j = y; j < y + height; j++) {
+                for (int i = x; i < x + width; i++) {
+                    drawPixel(i, j, color);
                 }
-            } else if (Character.isWhitespace(character)) {
-                // skip
-            } else {
-                // Unsupported character, you can choose to draw a placeholder or ignore it
+            }
+        } else {
+            for (int i = x; i < x + width; i++) {
+                drawPixel(i, y, color);
+                drawPixel(i, y + height - 1, color);
+            }
+            for (int j = y; j < y + height; j++) {
+                drawPixel(x, j, color);
+                drawPixel(x + width - 1, j, color);
             }
         }
     }
@@ -458,13 +92,13 @@ public class Renderer {
         Arrays.fill(this.depths, Float.POSITIVE_INFINITY);
     }
 
-    private boolean isBackface(Geometry.TransformedTriangle triangle) {;
+    public boolean isBackface(Geometry.TransformedTriangle triangle) {;
             float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
                         (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
             return area >= 0;
     }
 
-    private void rasterize(Geometry.TransformedTriangle triangle, int argb) {
+    public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
         int minX = Math.max(0, (int) Math.floor(Math.min(triangle.a.x, Math.min(triangle.b.x, triangle.c.x))));
         int maxX = Math.min(Game.WIDTH - 1,
                 (int) Math.ceil(Math.max(triangle.a.x, Math.max(triangle.b.x, triangle.c.x))));
@@ -498,7 +132,7 @@ public class Renderer {
         }
     }
 
-    private void drawWireframe(Geometry.TransformedTriangle t, int color) {
+    public void drawWireframe(Geometry.TransformedTriangle t, int color) {
         drawLineDepth(t.a.x, t.a.y, t.a.z,
                 t.b.x, t.b.y, t.b.z, color);
 
@@ -509,7 +143,7 @@ public class Renderer {
                 t.a.x, t.a.y, t.a.z, color);
     }
 
-    private void drawLine(int x0, int y0, int x1, int y1, int color) {
+    public void drawLine(int x0, int y0, int x1, int y1, int color) {
         float dx = x1 - x0;
         float dy = y1 - y0;
 

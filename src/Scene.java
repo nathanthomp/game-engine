@@ -81,4 +81,65 @@ public class Scene {
             camera.getPosition().z += right.z * moveSpeed;
         }
     }
+
+    public void render(Renderer renderer) {
+        Matrix viewMatrix = this.getCamera().getViewMatrix();
+        Matrix projectionMatrix = this.getCamera().getProjectionMatrix();
+
+        for (Entity entity : this.getEntities()) {
+            if (entity instanceof Renderable renderable) {
+
+                Matrix modelMatrix = entity.getTransform().getModelMatrix();
+                Matrix mvpMatrix = projectionMatrix.multiply(viewMatrix).multiply(modelMatrix);
+
+                Geometry.Vertex[] transformedVertices = new Geometry.Vertex[renderable.getMesh().vertices.length];
+                for (int i = 0; i < renderable.getMesh().vertices.length; i++) {
+                    Geometry.Vertex vertex = renderable.getMesh().vertices[i];
+
+                    // 1. Clip-space getPosition()
+                    Geometry.Vertex clip = mvpMatrix.multiply(vertex);
+
+                    // 2. Perspective divide → NDC
+                    float ndcX = clip.x / clip.w;
+                    float ndcY = clip.y / clip.w;
+                    float ndcZ = clip.z / clip.w;
+
+                    // 3. Viewport transform → screen space
+                    float screenX = (ndcX + 1f) * 0.5f * Game.WIDTH;
+                    float screenY = (1f - ndcY) * 0.5f * Game.HEIGHT;
+
+                    transformedVertices[i] = new Geometry.Vertex(screenX, screenY, ndcZ);
+                }
+
+                for (Geometry.Triangle triangle : renderable.getMesh().triangles) {
+                    Geometry.TransformedTriangle transformedTriangle = new Geometry.TransformedTriangle(
+                            transformedVertices[triangle.a],
+                            transformedVertices[triangle.b],
+                            transformedVertices[triangle.c]);
+
+                    if (!renderer.isBackface(transformedTriangle)) {
+                        renderer.rasterize(transformedTriangle, triangle.color);
+                        renderer.drawWireframe(transformedTriangle, 0xFFFFFFFF);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Rendering 2D overlays
+         */
+        renderer.drawLine(Game.WIDTH/2 - 10, Game.HEIGHT/2,
+            Game.WIDTH/2 + 10, Game.HEIGHT/2,
+            0xFFFFFFFF);
+
+        renderer.drawLine(Game.WIDTH/2, Game.HEIGHT/2 - 10,
+            Game.WIDTH/2, Game.HEIGHT/2 + 10,
+            0xFFFFFFFF);
+
+        renderer.renderRectangle(5, 5, Game.WIDTH - 10, Game.HEIGHT - 10, 0xFF00FF00, false);
+    }
+
+    public void dispose() {
+        // Clean up resources if needed
+    }
 }
