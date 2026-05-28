@@ -29,7 +29,7 @@ public final class Game implements ActionListener {
     public Game() {
         Input input = new Input();
 
-        Scene initialScene = new Scene(input);
+        Scene initialScene = new MenuScene(input);
         this.manager = new Manager(initialScene);
 
         Surface surface = new Surface(Game.TITLE, input);

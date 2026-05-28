@@ -356,7 +356,8 @@ public class Text {
         }
     }
     
-    public static int[] getGlyph(char character, int scale) {
+    // TODO: Can be optimized
+    public static int[] getGlyph(char character, Size size) {
         int[] glyph = new int[GLYTH_LENGTH * GLYTH_LENGTH];
         if (Character.isDigit(character)) {
             int digit = Character.getNumericValue(character);
@@ -380,11 +381,11 @@ public class Text {
             }
         }
 
-        if (scale == 1) {
+        if (size.getScale() == 1) {
             return glyph;
         }
 
-        return scaleGlyph(glyph, scale);
+        return scaleGlyph(glyph, size.getScale());
     }
 
     private static int[] scaleGlyph(int[] glyph, int scale) {

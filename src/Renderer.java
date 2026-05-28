@@ -38,31 +38,29 @@ public class Renderer {
         int scale = 1;
         int padding = 2;
 
-        this.renderText("0123456789", scale, 10, startY);
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Text.Size.REGULAR, 10, startY);
 
         startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
         scale++;
-        Text.Size size = Text.Size.LARGE;
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ", scale, 10, startY);
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Text.Size.MEDIUM, 10, startY);
 
         startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
-        scale--;
 
-        this.renderText("FPS: " + rendersPerSecond, scale, 10, 38);
+        this.renderText("FPS: " + rendersPerSecond, Text.Size.LARGE, 10, 38);
 
         this.surface.repaint();
     }
 
-    public void renderText(String text, int scale, int startX, int startY) {
+    public void renderText(String text, Text.Size size, int startX, int startY) {
         for (int i = 0; i < text.length(); i++) {
             char character = text.charAt(i);
-            int[] glyph = Text.getGlyph(character, scale);
+            int[] glyph = Text.getGlyph(character, size);
 
             for (int j = 0; j < glyph.length; j++) {
                 if (glyph[j] == 1) {
-                    int gx = j % (Text.GLYTH_LENGTH * scale);
-                    int gy = j / (Text.GLYTH_LENGTH * scale);
-                    drawPixel(startX + i * (Text.GLYTH_LENGTH * scale) + gx, startY + gy, 0xFFFFFFFF);
+                    int gx = j % (Text.GLYTH_LENGTH * size.getScale());
+                    int gy = j / (Text.GLYTH_LENGTH * size.getScale());
+                    drawPixel(startX + i * (Text.GLYTH_LENGTH * size.getScale()) + gx, startY + gy, 0xFFFFFFFF);
                 }
             }
         }
