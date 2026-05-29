@@ -1,8 +1,8 @@
 public class Widget {
-    public int x, y, width, height;
-    public boolean visible = true;
-    public boolean hovered = false;
-    public boolean pressed = false;
+    private int x, y, width, height;
+    private boolean visible = true;
+    private boolean hovered = false;
+    private boolean pressed = false;
 
     public Widget(int x, int y, int width, int height) {
         this.x = x;
@@ -11,7 +11,7 @@ public class Widget {
         this.height = height;
     }
 
-    public void update(Input input) {
+    public void update(Manager manager, Input input) {
         if (!this.visible) {
             return;
         }
@@ -27,7 +27,7 @@ public class Widget {
         }
 
         if (pressed && hovered && mouseReleased) {
-            System.out.println("Button Running");
+            manager.requestChange(new PlayScene(manager, input));
             this.visible = false;
         }
 

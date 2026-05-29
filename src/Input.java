@@ -1,8 +1,5 @@
 import java.util.Arrays;
 
-/**
- * TODO: Add mouse input support.
- */
 public class Input {
     private final boolean[] down = new boolean[256];
     private final boolean[] pressed = new boolean[256];
@@ -20,7 +17,6 @@ public class Input {
     public void release() {
         Arrays.fill(this.pressed, false);
         Arrays.fill(this.released, false);
-        Arrays.fill(this.mouseDown, false);
         Arrays.fill(this.mousePressed, false);
         Arrays.fill(this.mouseReleased, false);
 

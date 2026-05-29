@@ -4,8 +4,8 @@ import java.util.List;
 public final class MenuScene extends Scene {
     private final List<Widget> widgets = new ArrayList<Widget>();
 
-    public MenuScene(Input input) {
-        super(input);
+    public MenuScene(Manager manager, Input input) {
+        super(manager, input);
         // HorizontalCenter = (containerWidth / 2) - (localWidth / 2)
         // VerticalCenter = (containerHeight / 2) - (localHeight / 2)
         int width = 500;
@@ -16,9 +16,19 @@ public final class MenuScene extends Scene {
     }
 
     @Override
+    public void onEnter() {
+        System.out.println("Entering MenuScene");
+    }
+
+    @Override
+    public void onExit() {
+        System.out.println("Exiting MenuScene");
+    }    
+
+    @Override
     public void update(float deltaTime) {
         for (Widget widget : this.widgets) {
-            widget.update(this.input);
+            widget.update(this.manager, this.input);
         }
     }
 
@@ -27,9 +37,5 @@ public final class MenuScene extends Scene {
         for (Widget widget : this.widgets) {
             widget.render(renderer);
         }
-    }
-
-    @Override
-    public void dispose() {
-    }
+    }  
 }

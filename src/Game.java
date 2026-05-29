@@ -29,13 +29,16 @@ public final class Game implements ActionListener {
     public Game() {
         Input input = new Input();
 
-        Scene initialScene = new MenuScene(input);
-        this.manager = new Manager(initialScene);
+        Manager manager = new Manager();
+        Scene initalScene = new MenuScene(manager, input);
+        manager.requestChange(initalScene);
 
         Surface surface = new Surface(Game.TITLE, input);
-        this.renderer = new Renderer(surface);
+        Renderer renderer = new Renderer(surface);
 
         this.input = input;
+        this.manager = manager;
+        this.renderer = renderer;
 
         // Move this to a start method if you want a menu or something
         this.lastTime = System.nanoTime();
@@ -47,8 +50,10 @@ public final class Game implements ActionListener {
         float deltaTime = this.computeDeltaTime();
         this.computeRendersPerSecond(deltaTime);
 
+        this.manager.processChanges();
         Scene currentScene = this.manager.getCurrentScene();
         currentScene.update(deltaTime);
+        // currentScene.update(deltaTime, this.input, this.manager)
         this.renderer.render(currentScene, this.rendersPerSecond);
 
         this.input.release();

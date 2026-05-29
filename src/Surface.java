@@ -27,6 +27,8 @@ public final class Surface extends JFrame {
 
             this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
             this.setDoubleBuffered(true);
+            this.setFocusable(true);
+            this.requestFocusInWindow();
 
             this.addKeyListener(this);
             this.addMouseListener(this);
@@ -90,9 +92,6 @@ public final class Surface extends JFrame {
 
     public Surface(String title, Input input) {
         this.display = new Display(input);
-
-        this.setFocusable(true);
-        this.requestFocusInWindow();
 
         this.setTitle(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

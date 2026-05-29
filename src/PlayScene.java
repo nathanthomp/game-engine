@@ -3,10 +3,10 @@ import java.util.List;
 
 public final class PlayScene extends Scene {
     private final Camera camera = new Camera();
-    private final List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities = new ArrayList<Entity>();
 
-    public PlayScene(Input input) {
-        super(input);
+    public PlayScene(Manager manager, Input input) {
+        super(manager, input);
         this.entities.add(new Cube(0, 0, -5));
         this.entities.add(new Cube(0, 5, -5));
         this.entities.add(new Cube(-5, 0, -5));
@@ -14,13 +14,18 @@ public final class PlayScene extends Scene {
         this.entities.add(new Cube(5, 0, -5));
     }
 
-    public List<Entity> getEntities() {
-        return this.entities;
+    @Override
+    public void onEnter() {
+        System.out.println("Entering PlayScene");
     }
 
+    @Override
+    public void onExit() {
+        System.out.println("Exiting PlayScene");
+    }    
+
+    @Override
     public void update(float deltaTime) {
-        
-        // float lookSpeed = 0.02f;
         float lookSpeed = 0.002f;
         float moveSpeed = 0.1f;
 
@@ -31,6 +36,10 @@ public final class PlayScene extends Scene {
 
         Transform.Position forward = camera.getForward();
         Transform.Position right = camera.getRight();
+
+        if (this.input.isDown(27)) {
+            this.manager.requestChange(new MenuScene(this.manager, this.input));
+        }
 
         // W = forward
         if (this.input.isDown(87)) {
@@ -59,11 +68,12 @@ public final class PlayScene extends Scene {
         }
     }
 
+    @Override
     public void render(Renderer renderer) {
         Matrix viewMatrix = this.camera.getViewMatrix();
         Matrix projectionMatrix = this.camera.getProjectionMatrix();
 
-        for (Entity entity : this.getEntities()) {
+        for (Entity entity : this.entities) {
             if (entity instanceof Renderable renderable) {
 
                 Matrix modelMatrix = entity.getTransform().getModelMatrix();
@@ -114,9 +124,5 @@ public final class PlayScene extends Scene {
             0xFFFFFFFF);
 
         renderer.renderRectangle(5, 5, Game.WIDTH - 10, Game.HEIGHT - 10, 0xFF00FF00, false);
-    }
-
-    public void dispose() {
-
     }
 }
