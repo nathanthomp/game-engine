@@ -12,7 +12,11 @@ public final class MenuScene extends Scene {
         int height = 50;
         int x = (Game.WIDTH / 2) - (width / 2);
         int y = (Game.HEIGHT / 2) - (height / 2);
-        this.widgets.add(new Widget(x, y, width, height));
+
+        Text startGameText = new Text(x, y-20, width, height, "START GAME");
+        this.widgets.add(startGameText);
+        Button startGameButton = new Button(x, y, width, height, (() -> manager.requestAdd(new PlayScene(manager, input))));
+        this.widgets.add(startGameButton);
     }
 
     @Override
@@ -23,12 +27,22 @@ public final class MenuScene extends Scene {
     @Override
     public void onExit() {
         System.out.println("Exiting MenuScene");
-    }    
+    }
+
+    @Override
+    public void pause() {
+        System.out.println("Pausing MenuScene");
+    }
+
+    @Override
+    public void resume() {
+        System.out.println("Resuming MenuScene");
+    }
 
     @Override
     public void update(float deltaTime) {
         for (Widget widget : this.widgets) {
-            widget.update(this.manager, this.input);
+            widget.update(this.input);
         }
     }
 

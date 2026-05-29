@@ -22,45 +22,40 @@ public class Renderer {
         this.depths = new float[this.pixels.length];
     }
 
-    /**
-     * Renderer must have render method
-     * 
-     * this.clear()
-     * scene.render(this) -> Scene must have render method
-     * Extra stuff here
-     */
     public void render(Scene scene, int rendersPerSecond) {
         this.clear();
-
         scene.render(this);
 
         int startY = 10;
-        int scale = 1;
         int padding = 2;
 
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Text.Size.REGULAR, 10, startY);
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR, 10, startY);
 
-        startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
-        scale++;
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Text.Size.MEDIUM, 10, startY);
+        startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) + padding;
 
-        startY = startY + (Text.GLYTH_LENGTH * scale) + padding;
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM, 10, startY);
 
-        this.renderText("FPS: " + rendersPerSecond, Text.Size.LARGE, 10, 38);
+        startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) + padding;
+
+        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10, startY);
+
+        startY = startY + (Font.GLYTH_LENGTH * Font.Size.LARGE.getScale()) + padding;
+
+        this.renderText("FPS: " + rendersPerSecond, Font.Size.REGULAR, 10, startY);
 
         this.surface.repaint();
     }
 
-    public void renderText(String text, Text.Size size, int startX, int startY) {
+    public void renderText(String text, Font.Size size, int startX, int startY) {
         for (int i = 0; i < text.length(); i++) {
             char character = text.charAt(i);
-            int[] glyph = Text.getGlyph(character, size);
+            int[] glyph = Font.getGlyph(character, size);
 
             for (int j = 0; j < glyph.length; j++) {
                 if (glyph[j] == 1) {
-                    int gx = j % (Text.GLYTH_LENGTH * size.getScale());
-                    int gy = j / (Text.GLYTH_LENGTH * size.getScale());
-                    drawPixel(startX + i * (Text.GLYTH_LENGTH * size.getScale()) + gx, startY + gy, 0xFFFFFFFF);
+                    int gx = j % (Font.GLYTH_LENGTH * size.getScale());
+                    int gy = j / (Font.GLYTH_LENGTH * size.getScale());
+                    drawPixel(startX + i * (Font.GLYTH_LENGTH * size.getScale()) + gx, startY + gy, 0xFFFFFFFF);
                 }
             }
         }

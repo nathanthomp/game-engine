@@ -9,6 +9,8 @@ public abstract class Scene {
 
     public abstract void onEnter();
     public abstract void onExit();
+    public abstract void pause();
+    public abstract void resume();
     public abstract void update(float deltaTime);
     public abstract void render(Renderer renderer);
 }

@@ -31,7 +31,7 @@ public final class Game implements ActionListener {
 
         Manager manager = new Manager();
         Scene initalScene = new MenuScene(manager, input);
-        manager.requestChange(initalScene);
+        manager.requestAdd(initalScene);
 
         Surface surface = new Surface(Game.TITLE, input);
         Renderer renderer = new Renderer(surface);

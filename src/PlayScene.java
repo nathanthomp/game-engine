@@ -22,7 +22,17 @@ public final class PlayScene extends Scene {
     @Override
     public void onExit() {
         System.out.println("Exiting PlayScene");
-    }    
+    }
+
+    @Override
+    public void pause() {
+        System.out.println("Pausing PlayScene");
+    }
+
+    @Override
+    public void resume() {
+        System.out.println("Resuming PlayScene");
+    }
 
     @Override
     public void update(float deltaTime) {
@@ -38,7 +48,8 @@ public final class PlayScene extends Scene {
         Transform.Position right = camera.getRight();
 
         if (this.input.isDown(27)) {
-            this.manager.requestChange(new MenuScene(this.manager, this.input));
+            // Add a PauseScene
+            this.manager.requestAdd(new PauseScene(this.manager, this.input));
         }
 
         // W = forward

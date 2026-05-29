@@ -1,50 +1,79 @@
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.Stack;
 
 public final class Manager {
-
     private static class Change {
-        public Scene requestedScene;
+        private enum Type {
+            ADD,
+            REMOVE,
+            REPLACE
+        }
 
-        public Change(Scene requestedScene) {
+        private Type changeType;
+        private Scene requestedScene;
+
+        private Change(Type changeType, Scene requestedScene) {
+            this.changeType = changeType;
             this.requestedScene = requestedScene;
         }
     }
 
-    // TODO: Make this a stack of scenes to implement pause/resume
-    private Scene currentScene;
+    private final Stack<Scene> sceneStack = new Stack<Scene>();
     private final Queue<Change> changes = new ArrayDeque<>();
 
-    public Manager() {
+    public Scene getCurrentScene() {
+        return this.sceneStack.peek();
     }
 
-    public void requestChange(Scene newScene) {
-        this.changes.add(new Change(newScene));
+    public void requestAdd(Scene newScene) {
+        this.changes.add(new Change(Change.Type.ADD, newScene));
+    }
+
+    public void requestRemove() {
+        this.changes.add(new Change(Change.Type.REMOVE, null));
+    }
+
+    public void requestReplace(Scene newScene) {
+        this.changes.add(new Change(Change.Type.REPLACE, newScene));
     }
 
     public void processChanges() {
-        // If there are no changes, there is nothing to process
-        if (this.changes.isEmpty()) {
-            return;
+        while (!this.changes.isEmpty()) {
+            Change change = this.changes.poll();
+            switch (change.changeType) {
+                case Change.Type.ADD: {
+                    if (!this.sceneStack.empty()) {
+                        Scene currentScene = this.sceneStack.peek();
+                        currentScene.pause();
+                    }
+                    this.sceneStack.push(change.requestedScene);
+                    change.requestedScene.onEnter();
+                    break;
+                }
+                case Change.Type.REMOVE: {
+                    if (!this.sceneStack.empty()) {
+                        Scene currentScene = this.sceneStack.pop();
+                        currentScene.onExit();
+                        if (!this.sceneStack.empty()) {
+                            Scene newCurrentScene = this.sceneStack.peek();
+                            newCurrentScene.resume();
+                        } else {
+                            // There are no scenes left??
+                        }
+                    }
+                    break;
+                }
+                case Change.Type.REPLACE: {
+                    while (!this.sceneStack.empty()) {
+                        Scene currentScene = this.sceneStack.pop();
+                        currentScene.onExit();
+                    }
+                    this.sceneStack.push(change.requestedScene);
+                    change.requestedScene.onEnter();
+                    break;
+                }
+            }
         }
-
-        // If there are changes:
-        // 1. OnExit the current scene if present
-        // 2. Get the first change:
-        // 3. onEnter the change scene
-        // 4. update the current scene to change scene
-
-        if (this.currentScene != null) {
-            this.currentScene.onExit();
-        }
-
-        Scene requestedScene = this.changes.poll().requestedScene;
-        requestedScene.onEnter();
-
-        this.currentScene = requestedScene;
-    }
-
-    public Scene getCurrentScene() {
-        return this.currentScene;
     }
 }
