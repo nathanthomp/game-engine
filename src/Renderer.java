@@ -26,22 +26,22 @@ public class Renderer {
         this.clear();
         scene.render(this);
 
-        int startY = 10;
-        int padding = 2;
+        // int startY = 10;
+        // int padding = 2;
 
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR, 10, startY);
 
-        startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) + padding;
+        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) + padding;
 
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM, 10, startY);
 
-        startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) + padding;
+        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) + padding;
 
-        this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10, startY);
 
-        startY = startY + (Font.GLYTH_LENGTH * Font.Size.LARGE.getScale()) + padding;
+        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.LARGE.getScale()) + padding;
 
-        this.renderText("FPS: " + rendersPerSecond, Font.Size.REGULAR, 10, startY);
+        // this.renderText("FPS: " + rendersPerSecond, Font.Size.REGULAR, 10, startY);
 
         this.surface.repaint();
     }
@@ -59,6 +59,11 @@ public class Renderer {
                 }
             }
         }
+
+        // Draw a background rectangle for debugging text rendering
+        // int textWidth = text.length() * Font.GLYTH_LENGTH * size.getScale();
+        // int textHeight = Font.GLYTH_LENGTH * size.getScale();
+        // this.renderRectangle(startX, startY, textWidth, textHeight, 0xFF000000, false);
     }
 
     public void renderRectangle(int x, int y, int width, int height, int color, boolean fill) {

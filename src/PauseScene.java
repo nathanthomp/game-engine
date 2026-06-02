@@ -12,15 +12,15 @@ public class PauseScene extends Scene {
         int y = (Game.HEIGHT / 2) - (height / 2);
 
         // Resume game button
-        Text resumeGameText = new Text(x, 100, width, height, "RESUME GAME");
+        Text resumeGameText = new Text(x, 100, "RESUME GAME", Font.Size.MEDIUM);
         this.widgets.add(resumeGameText);
-        Button resumeGameButton = new Button(x, 120, width, height, (() -> manager.requestRemove()));
+        Button resumeGameButton = new Button(x, 120, width, height, (() -> manager.requestBackward()));
         this.widgets.add(resumeGameButton);
 
         // Exit game button
-        Text exitGameText = new Text(x, 400, width, height, "EXIT GAME");
+        Text exitGameText = new Text(x, 400, "EXIT GAME", Font.Size.MEDIUM);
         this.widgets.add(exitGameText);
-        Button exitGameButton = new Button(x, 420, width, height, (() -> manager.requestReplace(new MenuScene(manager, input))));
+        Button exitGameButton = new Button(x, 420, width, height, (() -> manager.requestReset()));
         this.widgets.add(exitGameButton);
     }
 

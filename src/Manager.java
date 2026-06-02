@@ -5,13 +5,18 @@ import java.util.Stack;
 public final class Manager {
     private static class Change {
         private enum Type {
-            ADD,
-            REMOVE,
-            REPLACE
+            FORWARD,
+            BACKWARD,
+            RESET
         }
 
         private Type changeType;
         private Scene requestedScene;
+
+        private Change(Type changeType) {
+            this.changeType = changeType;
+            this.requestedScene = null;
+        }
 
         private Change(Type changeType, Scene requestedScene) {
             this.changeType = changeType;
@@ -26,23 +31,27 @@ public final class Manager {
         return this.sceneStack.peek();
     }
 
-    public void requestAdd(Scene newScene) {
-        this.changes.add(new Change(Change.Type.ADD, newScene));
+    public void requestForward(Scene newScene) {
+        this.changes.add(new Change(Change.Type.FORWARD, newScene));
     }
 
-    public void requestRemove() {
-        this.changes.add(new Change(Change.Type.REMOVE, null));
+    public void requestBackward() {
+        this.changes.add(new Change(Change.Type.BACKWARD));
     }
 
-    public void requestReplace(Scene newScene) {
-        this.changes.add(new Change(Change.Type.REPLACE, newScene));
+    public void requestReset() {
+        this.changes.add(new Change(Change.Type.RESET));
+    }
+
+    public void clear() {
+        // TODO: Make a destroy method (exit all scenes)
     }
 
     public void processChanges() {
         while (!this.changes.isEmpty()) {
             Change change = this.changes.poll();
             switch (change.changeType) {
-                case Change.Type.ADD: {
+                case Change.Type.FORWARD: {
                     if (!this.sceneStack.empty()) {
                         Scene currentScene = this.sceneStack.peek();
                         currentScene.pause();
@@ -51,7 +60,7 @@ public final class Manager {
                     change.requestedScene.onEnter();
                     break;
                 }
-                case Change.Type.REMOVE: {
+                case Change.Type.BACKWARD: {
                     if (!this.sceneStack.empty()) {
                         Scene currentScene = this.sceneStack.pop();
                         currentScene.onExit();
@@ -64,13 +73,12 @@ public final class Manager {
                     }
                     break;
                 }
-                case Change.Type.REPLACE: {
-                    while (!this.sceneStack.empty()) {
+                case Change.Type.RESET: {
+                    while (this.sceneStack.size() > 1) {
                         Scene currentScene = this.sceneStack.pop();
                         currentScene.onExit();
                     }
-                    this.sceneStack.push(change.requestedScene);
-                    change.requestedScene.onEnter();
+                    this.sceneStack.peek().resume();
                     break;
                 }
             }

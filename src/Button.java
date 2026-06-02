@@ -1,8 +1,11 @@
 public class Button extends Widget {
+    private final int width, height;
     private final Runnable runnable;
 
     public Button(int x, int y, int width, int height, Runnable runnable) {
-        super(x, y, width, height);
+        super(x, y);
+        this.width = width;
+        this.height = height;
         this.runnable = runnable;
     }
 

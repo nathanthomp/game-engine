@@ -31,7 +31,7 @@ public final class Game implements ActionListener {
 
         Manager manager = new Manager();
         Scene initalScene = new MenuScene(manager, input);
-        manager.requestAdd(initalScene);
+        manager.requestForward(initalScene);
 
         Surface surface = new Surface(Game.TITLE, input);
         Renderer renderer = new Renderer(surface);
@@ -73,7 +73,6 @@ public final class Game implements ActionListener {
             this.rendersPerSecond = this.renders;
             this.renders = 0;
             this.rendersPerSecondTimer -= 1.0f;
-            System.out.println("FPS: " + rendersPerSecond);
         }
     }
 

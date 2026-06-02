@@ -49,7 +49,7 @@ public final class PlayScene extends Scene {
 
         if (this.input.isDown(27)) {
             // Add a PauseScene
-            this.manager.requestAdd(new PauseScene(this.manager, this.input));
+            this.manager.requestForward(new PauseScene(this.manager, this.input));
         }
 
         // W = forward
@@ -117,7 +117,7 @@ public final class PlayScene extends Scene {
 
                     if (!renderer.isBackface(transformedTriangle)) {
                         renderer.rasterize(transformedTriangle, triangle.color);
-                        renderer.drawWireframe(transformedTriangle, 0xFFFFFFFF);
+                        // renderer.drawWireframe(transformedTriangle, 0xFFFFFFFF);
                     }
                 }
             }

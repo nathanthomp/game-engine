@@ -1,9 +1,11 @@
 public class Text extends Widget {
     private final String text;
+    private final Font.Size fontSize;
 
-    public Text(int x, int y, int width, int height, String text) {
-        super(x, y, width, height);
+    public Text(int x, int y, String text, Font.Size fontSize) {
+        super(x, y);
         this.text = text;
+        this.fontSize = fontSize;
     }
 
     @Override
@@ -12,6 +14,6 @@ public class Text extends Widget {
 
     @Override
     public void render(Renderer renderer) {
-        renderer.renderText(this.text, Font.Size.MEDIUM, this.x, this.y);
+        renderer.renderText(this.text, this.fontSize, this.x, this.y);
     }
 }
