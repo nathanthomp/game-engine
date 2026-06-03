@@ -14,19 +14,11 @@ public final class MenuScene extends Scene {
         int startGameButtonX = (Game.WIDTH / 2) - (startGameButtonWidth / 2); // 150
         int startGameButtonY = (Game.HEIGHT / 2) - (startGameButtonHeight / 2); // 275
 
-        Button startGameButton = new Button(startGameButtonX, startGameButtonY, startGameButtonWidth, startGameButtonHeight, (() -> manager.requestForward(new PlayScene(manager, input))));
+        Button startGameButton = new Button(startGameButtonX, startGameButtonY, startGameButtonWidth,
+                startGameButtonHeight, (() -> manager.requestForward(new PlayScene(manager, input))));
         this.widgets.add(startGameButton);
 
-        String text = "START GAME";
-        Font.Size size = Font.Size.MEDIUM;
-
-        int startGameTextWidth = text.length() * Font.GLYTH_LENGTH * size.getScale(); // 160 (10 * 16)
-        int startGameTextHeight = Font.GLYTH_LENGTH * size.getScale(); // 16
-
-        int startGameTextX = startGameButtonX + (startGameButtonWidth / 2) - (startGameTextWidth / 2);
-        int startGameTextY = startGameButtonY + (startGameButtonHeight / 2) - (startGameTextHeight / 2);
-
-        Text startGameText = new Text(startGameTextX, startGameTextY, text, size);
+        Text startGameText = new Text(startGameButton, Alignment.CENTER_CENTER, "START GAME", Font.Size.MEDIUM);
         this.widgets.add(startGameText);
     }
 
@@ -62,5 +54,5 @@ public final class MenuScene extends Scene {
         for (Widget widget : this.widgets) {
             widget.render(renderer);
         }
-    }  
+    }
 }

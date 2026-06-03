@@ -1,11 +1,8 @@
 public class Button extends Widget {
-    private final int width, height;
     private final Runnable runnable;
 
     public Button(int x, int y, int width, int height, Runnable runnable) {
-        super(x, y);
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         this.runnable = runnable;
     }
 
@@ -13,7 +10,7 @@ public class Button extends Widget {
         if (!this.visible) {
             return;
         }
-        
+
         this.hovered = this.contains(input.getMouseX(), input.getMouseY());
 
         boolean mouseDown = input.isMouseDown(1);
