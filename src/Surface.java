@@ -17,7 +17,7 @@ import javax.swing.JPanel;
  */
 public final class Surface extends JFrame {
 
-    private final class Display extends JPanel  implements KeyListener, MouseListener, MouseMotionListener {
+    private final class Display extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
         private final Input input;
         private final BufferedImage frameBuffer;
 

@@ -76,8 +76,7 @@ public class Matrix {
         Matrix matrix = new Matrix();
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
-                matrix.m[col + row * 4] =
-                        m[row * 4]     * other.m[col] +
+                matrix.m[col + row * 4] = m[row * 4] * other.m[col] +
                         m[row * 4 + 1] * other.m[col + 4] +
                         m[row * 4 + 2] * other.m[col + 8] +
                         m[row * 4 + 3] * other.m[col + 12];
@@ -89,10 +88,10 @@ public class Matrix {
     public Geometry.Vertex multiply(Geometry.Vertex vertex) {
         float x = vertex.x, y = vertex.y, z = vertex.z, w = vertex.w;
 
-        float nx = m[0] * x + m[1] * y + m[2]  * z + m[3]  * w;
-        float ny = m[4] * x + m[5] * y + m[6]  * z + m[7]  * w;
+        float nx = m[0] * x + m[1] * y + m[2] * z + m[3] * w;
+        float ny = m[4] * x + m[5] * y + m[6] * z + m[7] * w;
         float nz = m[8] * x + m[9] * y + m[10] * z + m[11] * w;
-        float nw = m[12]* x + m[13]* y + m[14] * z + m[15] * w;
+        float nw = m[12] * x + m[13] * y + m[14] * z + m[15] * w;
 
         return new Geometry.Vertex(nx, ny, nz, nw);
     }

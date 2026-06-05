@@ -9,16 +9,12 @@ public class PauseScene extends Scene {
         int width = 500;
         int height = 50;
         int x = (Game.WIDTH / 2) - (width / 2);
-        int y = (Game.HEIGHT / 2) - (height / 2);
 
-        // Resume game button
         Button resumeGameButton = new Button(x, 120, width, height, (() -> manager.requestBackward()));
         this.widgets.add(resumeGameButton);
 
         Text resumeGameText = new Text(resumeGameButton, Alignment.CENTER_LEFT, "RESUME GAME", Font.Size.MEDIUM);
         this.widgets.add(resumeGameText);
-
-        // Exit game button
 
         Button exitGameButton = new Button(x, 420, width, height, (() -> manager.requestReset()));
         this.widgets.add(exitGameButton);

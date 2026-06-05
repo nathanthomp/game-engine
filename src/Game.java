@@ -10,12 +10,11 @@ import javax.swing.Timer;
 public final class Game implements ActionListener {
     public static final int WIDTH = 800, HEIGHT = 600;
 
-    private static final String TITLE = "Golf Game";
     private static final int DELAY = 0;
 
     private final Timer timer = new Timer(Game.DELAY, this);
 
-    private final Input input;          // Should Input be a singleton?
+    private final Input input; // Should Input be a singleton?
     private final Manager manager;
     private final Renderer renderer;
 
@@ -25,15 +24,15 @@ public final class Game implements ActionListener {
     private float rendersPerSecondTimer = 0;
     private int rendersPerSecond = 0;
 
-    // Pass in initial scene, title, width, height
-    public Game() {
+    // Pass in initial scene, width, height
+    public Game(String title) {
         Input input = new Input();
 
         Manager manager = new Manager();
         Scene initalScene = new MenuScene(manager, input);
         manager.requestForward(initalScene);
 
-        Surface surface = new Surface(Game.TITLE, input);
+        Surface surface = new Surface(title, input);
         Renderer renderer = new Renderer(surface);
 
         this.input = input;
@@ -77,6 +76,6 @@ public final class Game implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new Game();
+        new Game("Game");
     }
 }

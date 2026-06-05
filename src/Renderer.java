@@ -8,8 +8,11 @@ import java.util.Arrays;
  * 
  * Methods:
  * - render(Scene scene): renders the given scene
- * - renderText(String text, int scale, int x, int y): renders text at the given position and scale
- * - renderRectangle(int x, int y, int width, int height, int argb, boolean filled): renders a rectangle at the given position and size with the given color
+ * - renderText(String text, int scale, int x, int y): renders text at the given
+ * position and scale
+ * - renderRectangle(int x, int y, int width, int height, int argb, boolean
+ * filled): renders a rectangle at the given position and size with the given
+ * color
  */
 public class Renderer {
     private final Surface surface;
@@ -29,15 +32,20 @@ public class Renderer {
         // int startY = 10;
         // int padding = 2;
 
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR,
+        // 10, startY);
 
-        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) + padding;
+        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) +
+        // padding;
 
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM,
+        // 10, startY);
 
-        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) + padding;
+        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) +
+        // padding;
 
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10, startY);
+        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10,
+        // startY);
 
         // startY = startY + (Font.GLYTH_LENGTH * Font.Size.LARGE.getScale()) + padding;
 
@@ -53,17 +61,18 @@ public class Renderer {
 
             for (int j = 0; j < glyph.length; j++) {
                 if (glyph[j] == 1) {
-                    int gx = j % (Font.GLYTH_LENGTH * size.getScale());
-                    int gy = j / (Font.GLYTH_LENGTH * size.getScale());
-                    drawPixel(startX + i * (Font.GLYTH_LENGTH * size.getScale()) + gx, startY + gy, 0xFFFFFFFF);
+                    int gx = j % (Font.GLYPH_LENGTH * size.getScale());
+                    int gy = j / (Font.GLYPH_LENGTH * size.getScale());
+                    drawPixel(startX + i * (Font.GLYPH_LENGTH * size.getScale()) + gx, startY + gy, 0xFFFFFFFF);
                 }
             }
         }
 
         // Draw a background rectangle for debugging text rendering
-        // int textWidth = text.length() * Font.GLYTH_LENGTH * size.getScale();
-        // int textHeight = Font.GLYTH_LENGTH * size.getScale();
-        // this.renderRectangle(startX, startY, textWidth, textHeight, 0xFF000000, false);
+        // int textWidth = text.length() * Font.GLYPH_LENGTH * size.getScale();
+        // int textHeight = Font.GLYPH_LENGTH * size.getScale();
+        // this.renderRectangle(startX, startY, textWidth, textHeight, 0xFF000000,
+        // false);
     }
 
     public void renderRectangle(int x, int y, int width, int height, int color, boolean fill) {
@@ -90,10 +99,10 @@ public class Renderer {
         Arrays.fill(this.depths, Float.POSITIVE_INFINITY);
     }
 
-    public boolean isBackface(Geometry.TransformedTriangle triangle) {;
-            float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
-                        (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
-            return area >= 0;
+    public boolean isBackface(Geometry.TransformedTriangle triangle) {
+        float area = (triangle.b.x - triangle.a.x) * (triangle.c.y - triangle.a.y) -
+                (triangle.b.y - triangle.a.y) * (triangle.c.x - triangle.a.x);
+        return area >= 0;
     }
 
     public void rasterize(Geometry.TransformedTriangle triangle, int argb) {
@@ -195,7 +204,8 @@ public class Renderer {
     }
 
     private void drawPixel(int x, int y, int color) {
-        if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT) return;
+        if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT)
+            return;
         pixels[y * Game.WIDTH + x] = color;
     }
 
@@ -203,7 +213,7 @@ public class Renderer {
         if (x < 0 || x >= Game.WIDTH || y < 0 || y >= Game.HEIGHT) {
             return;
         }
-        
+
         int index = y * Game.WIDTH + x;
         if (depth < this.depths[index]) {
             this.depths[index] = depth;

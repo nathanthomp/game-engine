@@ -36,46 +36,10 @@ public final class PlayScene extends Scene {
 
     @Override
     public void update(float deltaTime) {
-        float lookSpeed = 0.002f;
-        float moveSpeed = 0.1f;
+        this.camera.move(this.input);
 
-        camera.yaw += this.input.getMouseDeltaX() * lookSpeed;
-        camera.pitch += this.input.getMouseDeltaY() * lookSpeed;
-
-        camera.pitch = Math.max(-1.5f, Math.min(1.5f, camera.pitch));
-
-        Transform.Position forward = camera.getForward();
-        Transform.Position right = camera.getRight();
-
-        if (this.input.isDown(27)) {
-            // Add a PauseScene
+        if (this.input.isDown(Input.KEY_ESCAPE)) {
             this.manager.requestForward(new PauseScene(this.manager, this.input));
-        }
-
-        // W = forward
-        if (this.input.isDown(87)) {
-            camera.getPosition().x += forward.x * moveSpeed;
-            camera.getPosition().y += forward.y * moveSpeed;
-            camera.getPosition().z += forward.z * moveSpeed;
-        }
-
-        // S = backward
-        if (this.input.isDown(83)) {
-            camera.getPosition().x -= forward.x * moveSpeed;
-            camera.getPosition().y -= forward.y * moveSpeed;
-            camera.getPosition().z -= forward.z * moveSpeed;
-        }
-
-        // A = strafe left
-        if (this.input.isDown(65)) {
-            camera.getPosition().x -= right.x * moveSpeed;
-            camera.getPosition().z -= right.z * moveSpeed;
-        }
-
-        // D = strafe right
-        if (this.input.isDown(68)) {
-            camera.getPosition().x += right.x * moveSpeed;
-            camera.getPosition().z += right.z * moveSpeed;
         }
     }
 
@@ -126,14 +90,12 @@ public final class PlayScene extends Scene {
         /**
          * Rendering 2D overlays
          */
-        renderer.drawLine(Game.WIDTH/2 - 10, Game.HEIGHT/2,
-            Game.WIDTH/2 + 10, Game.HEIGHT/2,
-            0xFFFFFFFF);
+        renderer.drawLine(Game.WIDTH / 2 - 10, Game.HEIGHT / 2,
+                Game.WIDTH / 2 + 10, Game.HEIGHT / 2,
+                0xFFFFFFFF);
 
-        renderer.drawLine(Game.WIDTH/2, Game.HEIGHT/2 - 10,
-            Game.WIDTH/2, Game.HEIGHT/2 + 10,
-            0xFFFFFFFF);
-
-        renderer.renderRectangle(5, 5, Game.WIDTH - 10, Game.HEIGHT - 10, 0xFF00FF00, false);
+        renderer.drawLine(Game.WIDTH / 2, Game.HEIGHT / 2 - 10,
+                Game.WIDTH / 2, Game.HEIGHT / 2 + 10,
+                0xFFFFFFFF);
     }
 }

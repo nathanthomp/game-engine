@@ -6,8 +6,6 @@ public final class MenuScene extends Scene {
 
     public MenuScene(Manager manager, Input input) {
         super(manager, input);
-        // HorizontalCenter or x = containerX + (containerWidth / 2) - (localWidth / 2)
-        // VerticalCenter or y = containerY + (containerHeight / 2) - (localHeight / 2)
 
         int startGameButtonWidth = 500;
         int startGameButtonHeight = 50;

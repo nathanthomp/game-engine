@@ -52,8 +52,6 @@ public abstract class Widget {
     protected final int width, height;
 
     protected boolean visible = true;
-    protected boolean hovered = false;
-    protected boolean pressed = false;
 
     public Widget(int x, int y, int width, int height) {
         this.x = x;

@@ -7,23 +7,22 @@ public class Cube extends Entity implements Renderable {
         super();
         this.mesh = this.build();
         this.transform = new Transform(
-            new Transform.Position(x, y, z),
-            new Transform.Rotation(0, 0, 0),
-            new Transform.Scale(1, 1, 1)
-        );
+                new Transform.Position(x, y, z),
+                new Transform.Rotation(0, 0, 0),
+                new Transform.Scale(1, 1, 1));
     }
 
     public Geometry.Mesh build() {
         Geometry.Vertex[] vertices = new Geometry.Vertex[] {
-            new Geometry.Vertex(-1, -1, -1), // 0
-            new Geometry.Vertex(1, -1, -1), // 1
-            new Geometry.Vertex(1, 1, -1), // 2
-            new Geometry.Vertex(-1, 1, -1), // 3
+                new Geometry.Vertex(-1, -1, -1), // 0
+                new Geometry.Vertex(1, -1, -1), // 1
+                new Geometry.Vertex(1, 1, -1), // 2
+                new Geometry.Vertex(-1, 1, -1), // 3
 
-            new Geometry.Vertex(-1, -1, 1), // 4
-            new Geometry.Vertex(1, -1, 1), // 5
-            new Geometry.Vertex(1, 1, 1), // 6
-            new Geometry.Vertex(-1, 1, 1) // 7
+                new Geometry.Vertex(-1, -1, 1), // 4
+                new Geometry.Vertex(1, -1, 1), // 5
+                new Geometry.Vertex(1, 1, 1), // 6
+                new Geometry.Vertex(-1, 1, 1) // 7
         };
 
         Geometry.Triangle[] triangles = new Geometry.Triangle[] {

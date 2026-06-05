@@ -1,6 +1,15 @@
 import java.util.Arrays;
 
 public class Input {
+    public static final int KEY_W = 87;
+    public static final int KEY_A = 65;
+    public static final int KEY_S = 83;
+    public static final int KEY_D = 68;
+    public static final int KEY_ESCAPE = 27;
+
+    public static final int MOUSE_LEFT = 1;
+    public static final int MOUSE_RIGHT = 0;
+
     private final boolean[] down = new boolean[256];
     private final boolean[] pressed = new boolean[256];
     private final boolean[] released = new boolean[256];
@@ -50,7 +59,7 @@ public class Input {
             this.mouseReleased[button] = true;
         }
         this.mouseDown[button] = false;
-     }
+    }
 
     public boolean isDown(int key) {
         return this.down[key];

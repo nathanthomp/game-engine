@@ -1,10 +1,10 @@
 public class Text extends Widget {
     private static int calculateWidth(String text, Font.Size fontSize) {
-        return text.length() * Font.GLYTH_LENGTH * fontSize.getScale();
+        return text.length() * Font.GLYPH_LENGTH * fontSize.getScale();
     }
 
     private static int calculateHeight(Font.Size fontSize) {
-        return Font.GLYTH_LENGTH * fontSize.getScale();
+        return Font.GLYPH_LENGTH * fontSize.getScale();
     }
 
     private final String text;
