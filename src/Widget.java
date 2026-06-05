@@ -22,32 +22,6 @@
  * - public Widget(container, alignment, width, height)
  */
 public abstract class Widget {
-    private static int calculateX(Widget container, Alignment alignment, int width, int height) {
-        switch (alignment.getHorizontal()) {
-            case LEFT:
-                return container.getX();
-            case CENTER:
-                return container.getX() + (container.getWidth() / 2) - (width / 2);
-            case RIGHT:
-                return container.getX() + container.getWidth() - width;
-            default:
-                return 0;
-        }
-    }
-
-    private static int calculateY(Widget container, Alignment alignment, int width, int height) {
-        switch (alignment.getVertical()) {
-            case TOP:
-                return container.getY();
-            case CENTER:
-                return container.getY() + (container.getHeight() / 2) - (height / 2);
-            case BOTTOM:
-                return container.getY() + container.getHeight() - height;
-            default:
-                return 0;
-        }
-    }
-
     protected final int x, y;
     protected final int width, height;
 
@@ -68,8 +42,8 @@ public abstract class Widget {
     }
 
     public Widget(Widget container, Alignment alignment, int width, int height) {
-        this.x = Widget.calculateX(container, alignment, width, height);
-        this.y = Widget.calculateY(container, alignment, width, height);
+        this.x = alignment.calculateX(container, width, height);
+        this.y = alignment.calculateY(container, width, height);
         this.width = width;
         this.height = height;
     }

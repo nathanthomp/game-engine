@@ -9,13 +9,13 @@ public class Alignment {
     public static Alignment BOTTOM_CENTER = new Alignment(Vertical.BOTTOM, Horizontal.CENTER);
     public static Alignment BOTTOM_RIGHT = new Alignment(Vertical.BOTTOM, Horizontal.RIGHT);
 
-    public enum Vertical {
+    private enum Vertical {
         TOP,
         CENTER,
         BOTTOM
     }
 
-    public enum Horizontal {
+    private enum Horizontal {
         LEFT,
         CENTER,
         RIGHT
@@ -29,11 +29,29 @@ public class Alignment {
         this.horizontal = horizontal;
     }
 
-    public Vertical getVertical() {
-        return this.vertical;
+    public int calculateX(Widget container, int width, int height) {
+        switch (this.horizontal) {
+            case LEFT:
+                return container.getX();
+            case CENTER:
+                return container.getX() + (container.getWidth() / 2) - (width / 2);
+            case RIGHT:
+                return container.getX() + container.getWidth() - width;
+            default:
+                return 0;
+        }
     }
 
-    public Horizontal getHorizontal() {
-        return this.horizontal;
+    public int calculateY(Widget container, int width, int height) {
+        switch (this.vertical) {
+            case TOP:
+                return container.getY();
+            case CENTER:
+                return container.getY() + (container.getHeight() / 2) - (height / 2);
+            case BOTTOM:
+                return container.getY() + container.getHeight() - height;
+            default:
+                return 0;
+        }
     }
 }
