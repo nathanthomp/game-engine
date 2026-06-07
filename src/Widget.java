@@ -64,7 +64,7 @@ public abstract class Widget {
         return this.height;
     }
 
-    public abstract void update(Input input);
+    public abstract void update();
 
     public abstract void render(Renderer renderer);
 }

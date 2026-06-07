@@ -40,25 +40,25 @@ public class Camera {
         return matrix;
     }
 
-    public void move(Input input) {
-        this.yaw += input.getMouseDeltaX() * this.lookSpeed;
-        this.pitch += input.getMouseDeltaY() * this.lookSpeed;
+    public void move() {
+        this.yaw += Input.getMouseDeltaX() * this.lookSpeed;
+        this.pitch += Input.getMouseDeltaY() * this.lookSpeed;
 
         this.pitch = Math.max(-1.5f, Math.min(1.5f, this.pitch));
 
-        if (input.isDown(Input.KEY_W)) {
+        if (Input.isDown(Input.KEY_W)) {
             this.moveForward(this.moveSpeed);
         }
 
-        if (input.isDown(Input.KEY_S)) {
+        if (Input.isDown(Input.KEY_S)) {
             this.moveBackward(this.moveSpeed);
         }
 
-        if (input.isDown(Input.KEY_A)) {
+        if (Input.isDown(Input.KEY_A)) {
             this.moveLeft(this.moveSpeed);
         }
 
-        if (input.isDown(Input.KEY_D)) {
+        if (Input.isDown(Input.KEY_D)) {
             this.moveRight(this.moveSpeed);
         }
     }

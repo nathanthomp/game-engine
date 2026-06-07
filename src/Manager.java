@@ -4,22 +4,22 @@ import java.util.Stack;
 
 public final class Manager {
     private static class Change {
-        private enum Type {
+        private enum Action {
             FORWARD,
             BACKWARD,
             RESET
         }
 
-        private Type changeType;
+        private Action changeAction;
         private Scene requestedScene;
 
-        private Change(Type changeType) {
-            this.changeType = changeType;
+        private Change(Action changeAction) {
+            this.changeAction = changeAction;
             this.requestedScene = null;
         }
 
-        private Change(Type changeType, Scene requestedScene) {
-            this.changeType = changeType;
+        private Change(Action changeAction, Scene requestedScene) {
+            this.changeAction = changeAction;
             this.requestedScene = requestedScene;
         }
     }
@@ -32,15 +32,15 @@ public final class Manager {
     }
 
     public void requestForward(Scene newScene) {
-        this.changes.add(new Change(Change.Type.FORWARD, newScene));
+        this.changes.add(new Change(Change.Action.FORWARD, newScene));
     }
 
     public void requestBackward() {
-        this.changes.add(new Change(Change.Type.BACKWARD));
+        this.changes.add(new Change(Change.Action.BACKWARD));
     }
 
     public void requestReset() {
-        this.changes.add(new Change(Change.Type.RESET));
+        this.changes.add(new Change(Change.Action.RESET));
     }
 
     public void clear() {
@@ -50,17 +50,17 @@ public final class Manager {
     public void processChanges() {
         while (!this.changes.isEmpty()) {
             Change change = this.changes.poll();
-            switch (change.changeType) {
-                case Change.Type.FORWARD: {
+            switch (change.changeAction) {
+                case Change.Action.FORWARD: {
                     if (!this.sceneStack.empty()) {
                         Scene currentScene = this.sceneStack.peek();
                         currentScene.pause();
                     }
                     this.sceneStack.push(change.requestedScene);
-                    change.requestedScene.onEnter();
+                    change.requestedScene.onEnter(this);
                     break;
                 }
-                case Change.Type.BACKWARD: {
+                case Change.Action.BACKWARD: {
                     if (!this.sceneStack.empty()) {
                         Scene currentScene = this.sceneStack.pop();
                         currentScene.onExit();
@@ -73,7 +73,7 @@ public final class Manager {
                     }
                     break;
                 }
-                case Change.Type.RESET: {
+                case Change.Action.RESET: {
                     while (this.sceneStack.size() > 1) {
                         Scene currentScene = this.sceneStack.pop();
                         currentScene.onExit();

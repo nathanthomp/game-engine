@@ -18,11 +18,9 @@ import javax.swing.JPanel;
 public final class Surface extends JFrame {
 
     private final class Display extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
-        private final Input input;
         private final BufferedImage frameBuffer;
 
-        public Display(Input input) {
-            this.input = input;
+        public Display() {
             this.frameBuffer = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
             this.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -43,12 +41,12 @@ public final class Surface extends JFrame {
 
         @Override
         public void keyPressed(KeyEvent event) {
-            this.input.keyDown(event.getKeyCode());
+            Input.keyDown(event.getKeyCode());
         }
 
         @Override
         public void keyReleased(KeyEvent event) {
-            this.input.keyUp(event.getKeyCode());
+            Input.keyUp(event.getKeyCode());
         }
 
         @Override
@@ -61,12 +59,12 @@ public final class Surface extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent event) {
-            input.mouseDown(event.getButton());
+            Input.mouseDown(event.getButton());
         }
 
         @Override
         public void mouseReleased(MouseEvent event) {
-            input.mouseUp(event.getButton());
+            Input.mouseUp(event.getButton());
         }
 
         @Override
@@ -79,19 +77,19 @@ public final class Surface extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent event) {
-            input.mouseMove(event.getX(), event.getY());
+            Input.mouseMove(event.getX(), event.getY());
         }
 
         @Override
         public void mouseMoved(MouseEvent event) {
-            input.mouseMove(event.getX(), event.getY());
+            Input.mouseMove(event.getX(), event.getY());
         }
     }
 
     private final Display display;
 
-    public Surface(String title, Input input) {
-        this.display = new Display(input);
+    public Surface(String title) {
+        this.display = new Display();
 
         this.setTitle(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

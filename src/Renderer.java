@@ -29,27 +29,7 @@ public class Renderer {
         this.clear();
         scene.render(this);
 
-        // int startY = 10;
-        // int padding = 2;
-
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.REGULAR,
-        // 10, startY);
-
-        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.REGULAR.getScale()) +
-        // padding;
-
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.MEDIUM,
-        // 10, startY);
-
-        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.MEDIUM.getScale()) +
-        // padding;
-
-        // this.renderText("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:", Font.Size.LARGE, 10,
-        // startY);
-
-        // startY = startY + (Font.GLYTH_LENGTH * Font.Size.LARGE.getScale()) + padding;
-
-        // this.renderText("FPS: " + rendersPerSecond, Font.Size.REGULAR, 10, startY);
+        this.renderText("FPS: " + rendersPerSecond, Font.Size.REGULAR, 10, 10);
 
         this.surface.repaint();
     }

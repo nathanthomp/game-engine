@@ -9,16 +9,16 @@ public class Button extends Widget {
         this.runnable = runnable;
     }
 
-    public void update(Input input) {
+    public void update() {
         if (!super.visible) {
             return;
         }
 
-        this.hovered = this.contains(input.getMouseX(), input.getMouseY());
+        this.hovered = this.contains(Input.getMouseX(), Input.getMouseY());
 
-        boolean mouseDown = input.isMouseDown(Input.MOUSE_LEFT);
-        boolean mousePressed = input.wasMousePressed(Input.MOUSE_LEFT);
-        boolean mouseReleased = input.wasMouseReleased(Input.MOUSE_LEFT);
+        boolean mouseDown = Input.isMouseDown(Input.MOUSE_LEFT);
+        boolean mousePressed = Input.wasMousePressed(Input.MOUSE_LEFT);
+        boolean mouseReleased = Input.wasMouseReleased(Input.MOUSE_LEFT);
 
         if (this.hovered && mousePressed) {
             this.pressed = true;

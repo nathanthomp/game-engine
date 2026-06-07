@@ -3,10 +3,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-/**
- * Represents the controller layer.
- * Primary responsibility is to control the game loop and user input.
- */
 public final class Game implements ActionListener {
     public static final int WIDTH = 800, HEIGHT = 600;
 
@@ -14,7 +10,6 @@ public final class Game implements ActionListener {
 
     private final Timer timer = new Timer(Game.DELAY, this);
 
-    private final Input input; // Should Input be a singleton?
     private final Manager manager;
     private final Renderer renderer;
 
@@ -24,18 +19,13 @@ public final class Game implements ActionListener {
     private float rendersPerSecondTimer = 0;
     private int rendersPerSecond = 0;
 
-    // Pass in initial scene, width, height
-    public Game(String title) {
-        Input input = new Input();
-
+    public Game(String title, Scene initialScene) {
         Manager manager = new Manager();
-        Scene initalScene = new MenuScene(manager, input);
-        manager.requestForward(initalScene);
+        manager.requestForward(initialScene);
 
-        Surface surface = new Surface(title, input);
+        Surface surface = new Surface(title);
         Renderer renderer = new Renderer(surface);
 
-        this.input = input;
         this.manager = manager;
         this.renderer = renderer;
 
@@ -52,10 +42,9 @@ public final class Game implements ActionListener {
         this.manager.processChanges();
         Scene currentScene = this.manager.getCurrentScene();
         currentScene.update(deltaTime);
-        // currentScene.update(deltaTime, this.input, this.manager)
         this.renderer.render(currentScene, this.rendersPerSecond);
 
-        this.input.release();
+        Input.release();
     }
 
     private float computeDeltaTime() {
@@ -76,6 +65,6 @@ public final class Game implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new Game("Game");
+        new Game("Game", new MenuScene());
     }
 }

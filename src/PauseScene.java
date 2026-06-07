@@ -4,8 +4,12 @@ import java.util.List;
 public class PauseScene extends Scene {
     private final List<Widget> widgets = new ArrayList<Widget>();
 
-    public PauseScene(Manager manager, Input input) {
-        super(manager, input);
+    public PauseScene() {
+        super();
+    }
+
+    @Override
+    public void onEnter(Manager manager) {
         int width = 500;
         int height = 50;
         int x = (Game.WIDTH / 2) - (width / 2);
@@ -21,10 +25,6 @@ public class PauseScene extends Scene {
 
         Text exitGameText = new Text(exitGameButton, Alignment.CENTER_RIGHT, "EXIT GAME", Font.Size.MEDIUM);
         this.widgets.add(exitGameText);
-    }
-
-    @Override
-    public void onEnter() {
         System.out.println("Entering PauseScene");
     }
 
@@ -46,7 +46,7 @@ public class PauseScene extends Scene {
     @Override
     public void update(float deltaTime) {
         for (Widget widget : this.widgets) {
-            widget.update(this.input);
+            widget.update();
         }
     }
 

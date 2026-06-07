@@ -10,6 +10,116 @@ public class Input {
     public static final int MOUSE_LEFT = 1;
     public static final int MOUSE_RIGHT = 0;
 
+    private static Input instance;
+
+    private static Input getInstance() {
+        if (instance == null) {
+            instance = new Input();
+        }
+        return instance;
+    }
+
+    public static void release() {
+        Input input = getInstance();
+        Arrays.fill(input.pressed, false);
+        Arrays.fill(input.released, false);
+        Arrays.fill(input.mousePressed, false);
+        Arrays.fill(input.mouseReleased, false);
+
+        input.mouseDeltaX = 0;
+        input.mouseDeltaY = 0;
+    }
+
+    public static void keyDown(int key) {
+        Input input = getInstance();
+        if (!input.down[key]) {
+            input.pressed[key] = true;
+        }
+        input.down[key] = true;
+    }
+
+    public static void keyUp(int key) {
+        Input input = getInstance();
+        if (input.down[key]) {
+            input.released[key] = true;
+        }
+        input.down[key] = false;
+    }
+
+    public static void mouseDown(int button) {
+        Input input = getInstance();
+        if (!input.mouseDown[button]) {
+            input.mousePressed[button] = true;
+        }
+        input.mouseDown[button] = true;
+    }
+
+    public static void mouseUp(int button) {
+        Input input = getInstance();
+        if (input.mouseDown[button]) {
+            input.mouseReleased[button] = true;
+        }
+        input.mouseDown[button] = false;
+    }
+
+    public static boolean isDown(int key) {
+        Input input = getInstance();
+        return input.down[key];
+    }
+
+    public static boolean wasPressed(int key) {
+        Input input = getInstance();
+        return input.pressed[key];
+    }
+
+    public static boolean wasReleased(int key) {
+        Input input = getInstance();
+        return input.released[key];
+    }
+
+    public static boolean isMouseDown(int button) {
+        Input input = getInstance();
+        return input.mouseDown[button];
+    }
+
+    public static boolean wasMousePressed(int button) {
+        Input input = getInstance();
+        return input.mousePressed[button];
+    }
+
+    public static boolean wasMouseReleased(int button) {
+        Input input = getInstance();
+        return input.mouseReleased[button];
+    }
+
+    public static void mouseMove(int x, int y) {
+        Input input = getInstance();
+        input.mouseDeltaX = x - input.mouseX;
+        input.mouseDeltaY = y - input.mouseY;
+        input.mouseX = x;
+        input.mouseY = y;
+    }
+
+    public static int getMouseX() {
+        Input input = getInstance();
+        return input.mouseX;
+    }
+
+    public static int getMouseY() {
+        Input input = getInstance();
+        return input.mouseY;
+    }
+
+    public static int getMouseDeltaX() {
+        Input input = getInstance();
+        return input.mouseDeltaX;
+    }
+
+    public static int getMouseDeltaY() {
+        Input input = getInstance();
+        return input.mouseDeltaY;
+    }
+
     private final boolean[] down = new boolean[256];
     private final boolean[] pressed = new boolean[256];
     private final boolean[] released = new boolean[256];
@@ -22,89 +132,4 @@ public class Input {
     private final boolean[] mouseDown = new boolean[8];
     private final boolean[] mousePressed = new boolean[8];
     private final boolean[] mouseReleased = new boolean[8];
-
-    public void release() {
-        Arrays.fill(this.pressed, false);
-        Arrays.fill(this.released, false);
-        Arrays.fill(this.mousePressed, false);
-        Arrays.fill(this.mouseReleased, false);
-
-        this.mouseDeltaX = 0;
-        this.mouseDeltaY = 0;
-    }
-
-    public void keyDown(int key) {
-        if (!this.down[key]) {
-            this.pressed[key] = true;
-        }
-        this.down[key] = true;
-    }
-
-    public void keyUp(int key) {
-        if (this.down[key]) {
-            this.released[key] = true;
-        }
-        this.down[key] = false;
-    }
-
-    public void mouseDown(int button) {
-        if (!this.mouseDown[button]) {
-            this.mousePressed[button] = true;
-        }
-        this.mouseDown[button] = true;
-    }
-
-    public void mouseUp(int button) {
-        if (this.mouseDown[button]) {
-            this.mouseReleased[button] = true;
-        }
-        this.mouseDown[button] = false;
-    }
-
-    public boolean isDown(int key) {
-        return this.down[key];
-    }
-
-    public boolean wasPressed(int key) {
-        return this.pressed[key];
-    }
-
-    public boolean wasReleased(int key) {
-        return this.released[key];
-    }
-
-    public boolean isMouseDown(int button) {
-        return this.mouseDown[button];
-    }
-
-    public boolean wasMousePressed(int button) {
-        return this.mousePressed[button];
-    }
-
-    public boolean wasMouseReleased(int button) {
-        return this.mouseReleased[button];
-    }
-
-    public void mouseMove(int x, int y) {
-        this.mouseDeltaX = x - this.mouseX;
-        this.mouseDeltaY = y - this.mouseY;
-        this.mouseX = x;
-        this.mouseY = y;
-    }
-
-    public int getMouseX() {
-        return this.mouseX;
-    }
-
-    public int getMouseY() {
-        return this.mouseY;
-    }
-
-    public int getMouseDeltaX() {
-        return this.mouseDeltaX;
-    }
-
-    public int getMouseDeltaY() {
-        return this.mouseDeltaY;
-    }
 }

@@ -5,17 +5,20 @@ public final class PlayScene extends Scene {
     private final Camera camera = new Camera();
     private final List<Entity> entities = new ArrayList<Entity>();
 
-    public PlayScene(Manager manager, Input input) {
-        super(manager, input);
+    private Manager manager;
+
+    public PlayScene() {
+        super();
+    }
+
+    @Override
+    public void onEnter(Manager manager) {
+        this.manager = manager;
         this.entities.add(new Cube(0, 0, -5));
         this.entities.add(new Cube(0, 5, -5));
         this.entities.add(new Cube(-5, 0, -5));
         this.entities.add(new Cube(0, -5, -5));
         this.entities.add(new Cube(5, 0, -5));
-    }
-
-    @Override
-    public void onEnter() {
         System.out.println("Entering PlayScene");
     }
 
@@ -36,10 +39,10 @@ public final class PlayScene extends Scene {
 
     @Override
     public void update(float deltaTime) {
-        this.camera.move(this.input);
+        this.camera.move();
 
-        if (this.input.isDown(Input.KEY_ESCAPE)) {
-            this.manager.requestForward(new PauseScene(this.manager, this.input));
+        if (Input.isDown(Input.KEY_ESCAPE)) {
+            this.manager.requestForward(new PauseScene());
         }
     }
 

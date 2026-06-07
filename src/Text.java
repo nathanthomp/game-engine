@@ -29,7 +29,7 @@ public class Text extends Widget {
     }
 
     @Override
-    public void update(Input input) {
+    public void update() {
     }
 
     @Override
